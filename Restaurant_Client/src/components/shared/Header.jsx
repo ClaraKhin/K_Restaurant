@@ -5,7 +5,7 @@ import logo from "../../assets/images/Golden_Dynasty.png";
 const Header = () => {
   return (
     <header
-      className="flex justify-between items-center py-4 px-8 bg-[#2a221e]"
+      className="flex justify-between items-center py-4 px-8 bg-[#1d1716]"
       style={{
         paddingLeft: "1rem",
         paddingRight: "1rem",
@@ -19,15 +19,15 @@ const Header = () => {
         <h1 className="text-lg font-semibold text-[#FFFFFF]">Golden Dynasty</h1>
       </div>
       {/* Search */}
-      <div className="flex items-center gap-4 bg-[#FAF0DC] px-5 py-2 rounded-[15px] w-[500px]">
+      <div className="flex items-center gap-4 bg-[#2a221e] px-5 py-2 rounded-[15px] w-[500px]">
         <SearchOutlined
-          style={{ color: "#2a221e", marginLeft: "10px" }}
+          style={{ color: "#FFFFFF", marginLeft: "10px" }}
           className="text-xl"
         />
         <input
           type="text"
           placeholder="Search"
-          style={{ color: "#2a221e", padding: "5px" }}
+          style={{ color: "#FFFFFF", padding: "5px" }}
           className="outline-none input-search "
         />
       </div>

@@ -9,7 +9,7 @@ import {
 
 const BottomNav = () => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#2a221e] p-2 h-16 flex justify-around ">
+    <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
       <button
         className="flex cursor-pointer items-center justify-center w-[200px]"
         style={{
