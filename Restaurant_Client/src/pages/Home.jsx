@@ -11,7 +11,7 @@ const Home = () => {
     <section
       className="bg-[#2a221e] min-h-screen overflow-y-auto flex gap-3"
       style={{
-        paddingBottom: "4.4rem",
+        paddingBottom: "4.5rem",
       }}
     >
       {/* Left */}

@@ -11,7 +11,7 @@ const RecentOrders = () => {
         paddingRight: "1rem",
       }}
     >
-      <div className="bg-[#1D1716] w-full rounded-lg h-[450px]">
+      <div className="bg-[#1D1716] w-full rounded-lg h-[396px]">
         <div
           className="flex justify-between items-center"
           style={{
@@ -36,8 +36,8 @@ const RecentOrders = () => {
         <div
           className="flex items-center gap-4 bg-[#2a221e] rounded-[15px] mx-6"
           style={{
-            paddingLeft: "1.5rem",
-            paddingRight: "1.5rem",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
             paddingTop: "1rem",
             paddingBottom: "1rem",
             marginLeft: "1rem",
@@ -51,8 +51,8 @@ const RecentOrders = () => {
           <input
             type="text"
             placeholder="Search recent orders"
-            style={{ color: "#FFFFFF", padding: "5px" }}
-            className="outline-none input-search "
+            style={{ color: "#FFFFFF", padding: "2px" }}
+            className="outline-none input-search w-[100%]"
           />
         </div>
 
@@ -63,7 +63,7 @@ const RecentOrders = () => {
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
             overflowY: "scroll",
-            height: "300px",
+            height: "240px",
             scrollbarWidth: "none",
           }}
         >

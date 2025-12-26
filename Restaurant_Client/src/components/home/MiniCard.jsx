@@ -4,7 +4,7 @@ const MiniCard = ({ title, icon, number, footerNum }) => {
   return (
     <div
       className="bg-[#1d1716] rounded-lg w-[50%]"
-      style={{ padding: "1.25rem" }}
+      style={{ padding: "1.2rem" }}
     >
       <div className="flex items-start justify-between">
         <h1
