@@ -44,11 +44,8 @@ const OrderList = () => {
             Table No: 3
           </h1>
         </div>
-        <div className="flex flex-col items-start gap-1">
-          <p
-            className=" text-green-600 "
-            style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
-          >
+        <div className="flex flex-col items-end gap-1">
+          <p className=" text-green-600 ">
             <CheckOutlined
               style={{
                 display: "inline",

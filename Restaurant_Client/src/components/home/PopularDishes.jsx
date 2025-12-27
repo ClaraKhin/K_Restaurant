@@ -34,7 +34,7 @@ const PopularDishes = () => {
         {/* Dishes */}
         <div
           className="overflow-y-scroll"
-          style={{ height: "610px", scrollbarWidth: "none" }}
+          style={{ height: "624px", scrollbarWidth: "none" }}
         >
           {popularDishes.map((dish) => {
             return (

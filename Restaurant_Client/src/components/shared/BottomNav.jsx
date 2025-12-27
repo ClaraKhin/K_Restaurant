@@ -1,4 +1,4 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   HomeOutlined,
   CoffeeOutlined,
@@ -8,9 +8,11 @@ import {
 } from "@ant-design/icons";
 
 const BottomNav = () => {
+  const navigate = useNavigate();
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
       <button
+        onClick={() => navigate("/home")}
         className="flex cursor-pointer items-center justify-center w-[200px]"
         style={{
           backgroundColor: "#FAF0DC",
@@ -23,14 +25,20 @@ const BottomNav = () => {
         />
         <p className="text-[#2a221e]">Home</p>
       </button>
-      <button className="flex cursor-pointer items-center justify-center w-[200px]">
+      <button
+        onClick={() => navigate("/orders")}
+        className="flex cursor-pointer items-center justify-center w-[200px]"
+      >
         <MenuOutlined
           className="text-2xl inline"
           style={{ color: "#FAF0DC", marginRight: "5px" }}
         />
         <p className="text-[#FAF0DC]">Orders</p>
       </button>
-      <button className="flex cursor-pointer items-center justify-center w-[200px]">
+      <button
+        onClick={() => navigate("/tables")}
+        className="flex cursor-pointer items-center justify-center w-[200px]"
+      >
         <CoffeeOutlined
           className="text-3xl inline"
           style={{ color: "#FAF0DC", marginRight: "5px" }}

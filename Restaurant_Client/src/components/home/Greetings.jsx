@@ -49,10 +49,13 @@ const Greetings = () => {
       }}
     >
       <div>
-        <h1 className="text-[#FFFFFF] text-2xl font-semibold tracking-wide">
+        <h1
+          className="text-[#FFFFFF] tracking-wide"
+          style={{ fontWeight: "600", fontSize: "1.5rem" }}
+        >
           Good Morning, Khin
         </h1>
-        <p className="text-[#ababab] text-sm">
+        <p className="text-[#ababab]" style={{ fontSize: "0.875rem" }}>
           Give your best services for customers 😊
         </p>
       </div>

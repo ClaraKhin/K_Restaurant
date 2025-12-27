@@ -32,7 +32,7 @@ const MiniCard = ({ title, icon, number, footerNum }) => {
           className="text-[#FFFFFF] font-bold"
           style={{ marginTop: "1.25rem", fontSize: "2.25rem" }}
         >
-          {number}
+          {title === "Total Earnings" ? `$${number}` : number}
         </h1>
         <h1
           className="text-[#FFFFFF]"
