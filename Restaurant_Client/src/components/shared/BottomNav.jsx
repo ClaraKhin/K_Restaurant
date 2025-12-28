@@ -12,7 +12,7 @@ const BottomNav = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
       <button
-        onClick={() => navigate("/home")}
+        onClick={() => navigate("/")}
         className="flex cursor-pointer items-center justify-center w-[200px]"
         style={{
           backgroundColor: "#FAF0DC",
