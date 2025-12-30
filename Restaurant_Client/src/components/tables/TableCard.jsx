@@ -1,12 +1,52 @@
 import React from "react";
+import { CheckOutlined } from "@ant-design/icons";
+import { getRandomBG } from "../../utils";
 
-const TableCard = () => {
+const TableCard = ({ name, status, initials }) => {
   return (
     <div
-      className="w-[450px] bg-[#1d1716] rounded-lg"
-      style={{ padding: "1rem", marginBottom: "1rem" }}
+      className="w-[450px] bg-[#1d1716] hover:bg-[#3A322E] rounded-lg cursor-pointer"
+      style={{ padding: "1rem" }}
     >
-      <h1>Table Card</h1>
+      <div
+        className="flex items-center justify-between "
+        style={{ paddingLeft: "0.25rem", paddingRight: "0.25rem" }}
+      >
+        <h1
+          className="text-[#FFFFFF]"
+          style={{ fontSize: "1.25rem", fontWeight: 600 }}
+        >
+          {name}
+        </h1>
+        <p
+          className={`${
+            status === "Booked"
+              ? "text-green-600 bg-[#2e4a40]"
+              : "bg-[#664a04] text-[#FFFFFF]"
+          } rounded-lg`}
+          style={{
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+            paddingTop: "0.25rem",
+            paddingBottom: "0.25rem",
+          }}
+        >
+          {status}
+        </p>
+      </div>
+      <div
+        className="flex items-center justify-center"
+        style={{ marginTop: "1rem", marginBottom: "1rem" }}
+      >
+        <h1
+          className={
+            "text-[#FFFFFF] rounded-full w-[60px] h-[60px] items-center justify-center flex"
+          }
+          style={{ padding: "1rem", backgroundColor: getRandomBG() }}
+        >
+          {initials}
+        </h1>
+      </div>
     </div>
   );
 };
