@@ -1,10 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { CheckOutlined } from "@ant-design/icons";
 import { getRandomBG } from "../../utils";
 
 const TableCard = ({ name, status, initials }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (status === "Booked") return;
+    navigate(`/menu`);
+  };
   return (
     <div
+      onClick={handleClick}
       className="w-[450px] bg-[#1d1716] hover:bg-[#3A322E] rounded-lg cursor-pointer"
       style={{ padding: "1rem" }}
     >
