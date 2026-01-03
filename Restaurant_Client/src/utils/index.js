@@ -3,9 +3,9 @@ export const getRandomBG = () => {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export const getBgColor = () => {
-    const bgarr = ["#002551ff", "#3e3c23ff", "#553e04ff", "#263e36ff", "#353535ff", "#0a3468ff"];
-    const randomBg = Math.floor(Math.random() * bgarr.length);
-    const color = bgarr[randomBg];
-    return color;
-}
+// export const getBgColor = () => {
+//     const bgarr = ["#002551ff", "#3e3c23ff", "#553e04ff", "#263e36ff", "#353535ff", "#0a3468ff"];
+//     const randomBg = Math.floor(Math.random() * bgarr.length);
+//     const color = bgarr[randomBg];
+//     return color;
+// }
