@@ -1,8 +1,15 @@
 import React from "react";
-import { ScheduleOutlined } from "@ant-design/icons";
+import {
+  ScheduleOutlined,
+  DeleteOutlined,
+  FolderAddOutlined,
+} from "@ant-design/icons";
 import BottomNav from "../components/shared/BottomNav";
 import BackButton from "../components/shared/BackButton";
 import MenuContainer from "../components/menu/MenuContainer";
+import CustomerInfo from "../components/menu/CustomerInfo";
+import CartInfo from "../components/menu/CartInfo";
+import BillInfo from "../components/menu/BillInfo";
 
 const Menu = () => {
   return (
@@ -61,7 +68,23 @@ const Menu = () => {
       </div>
 
       {/* Right */}
-      <div className="flex-[1] bg-[#1D1716]"></div>
+      <div
+        className="flex-[1] bg-[#1D1716] rounded-lg h-[780px]"
+        style={{
+          marginTop: "1rem",
+          marginRight: "0.75rem",
+
+          paddingTop: "0.5rem",
+        }}
+      >
+        {/* Customer Info*/}
+        <CustomerInfo />
+        <hr style={{ borderTop: "2px solid #2a2a2a" }} />
+        {/* Cart Items */}
+        <CartInfo />
+        {/* Bills */}
+        <BillInfo />
+      </div>
 
       <BottomNav />
     </section>

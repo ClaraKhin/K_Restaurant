@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { menus } from "../../constants";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 // import { getBgColor } from "../../utils";
 
 const MenuContainer = () => {
@@ -103,12 +104,25 @@ const MenuContainer = () => {
                 backgroundColor: hover === item.id ? "#7d7c7c3b" : "#1d1716",
               }}
             >
-              <h1
-                className="text-[#ffffff]"
-                style={{ fontSize: "1.125rem", fontWeight: 600 }}
-              >
-                {item.name}
-              </h1>
+              <div className="flex items-start justify-between w-full gap-2">
+                <h1
+                  className="text-[#ffffff]"
+                  style={{ fontSize: "1.125rem", fontWeight: 600 }}
+                >
+                  {item.name}
+                </h1>
+                <button
+                  style={{
+                    backgroundColor: "#2e4a40",
+                    color: "#02ca3a",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                    width: "2.5rem",
+                  }}
+                >
+                  <ShoppingCartOutlined style={{ fontSize: "1.125rem" }} />
+                </button>
+              </div>
               <div className="flex items-center justify-between w-full">
                 <p
                   className="text-[#ffffff] "
