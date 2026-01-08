@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
   CoffeeOutlined,
@@ -14,6 +14,7 @@ const BottomNav = () => {
   const [hover, setHover] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -23,41 +24,70 @@ const BottomNav = () => {
     setGuestCount((prev) => (prev > 0 ? prev - 1 : 0));
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
       <button
         onClick={() => navigate("/")}
         className="flex cursor-pointer items-center justify-center w-[200px]"
         style={{
-          backgroundColor: "#FAF0DC",
+          backgroundColor: isActive("/") ? "#FAF0DC" : "",
           borderRadius: "20px",
         }}
       >
         <HomeOutlined
           className="text-2xl inline"
-          style={{ color: "#2a221e", marginRight: "5px" }}
+          style={{
+            color: isActive("/") ? "#2a221e" : "#FAF0DC",
+            marginRight: "5px",
+          }}
         />
-        <p className="text-[#2a221e]">Home</p>
+        <p className={isActive("/") ? "text-[#2a221e]" : "text-[#FAF0DC]"}>
+          Home
+        </p>
       </button>
       <button
         onClick={() => navigate("/orders")}
         className="flex cursor-pointer items-center justify-center w-[200px]"
+        style={{
+          backgroundColor: isActive("/orders") ? "#FAF0DC" : "",
+          borderRadius: "20px",
+        }}
       >
         <MenuOutlined
           className="text-2xl inline"
-          style={{ color: "#FAF0DC", marginRight: "5px" }}
+          style={{
+            color: isActive("/orders") ? "#2a221e" : "#FAF0DC",
+            marginRight: "5px",
+          }}
         />
-        <p className="text-[#FAF0DC]">Orders</p>
+        <p
+          className={isActive("/orders") ? "text-[#2a221e]" : "text-[#FAF0DC]"}
+        >
+          Orders
+        </p>
       </button>
       <button
         onClick={() => navigate("/tables")}
         className="flex cursor-pointer items-center justify-center w-[200px]"
+        style={{
+          backgroundColor: isActive("/tables") ? "#FAF0DC" : "",
+          borderRadius: "20px",
+        }}
       >
         <CoffeeOutlined
           className="text-3xl inline"
-          style={{ color: "#FAF0DC", marginRight: "5px" }}
+          style={{
+            color: isActive("/tables") ? "#2a221e" : "#FAF0DC",
+            marginRight: "5px",
+          }}
         />
-        <p className="text-[#FAF0DC]">Tables</p>
+        <p
+          className={isActive("/tables") ? "text-[#2a221e]" : "text-[#FAF0DC]"}
+        >
+          Tables
+        </p>
       </button>
       <button className="flex cursor-pointer items-center justify-center w-[200px]">
         <EllipsisOutlined
@@ -73,6 +103,7 @@ const BottomNav = () => {
       </button>
 
       <button
+        disabled={isActive("/tables") || isActive("/menu")}
         onClick={openModal}
         className="absolute bottom-6 flex cursor-pointer items-center justify-center w-[50px] h-[50px]"
         style={{

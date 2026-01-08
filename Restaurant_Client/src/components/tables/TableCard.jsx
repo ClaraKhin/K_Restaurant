@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckOutlined } from "@ant-design/icons";
-import { getRandomBG } from "../../utils";
+// import { CheckOutlined } from "@ant-design/icons";
+import { getBgColor } from "../../utils";
 
-const TableCard = ({ name, status, initials }) => {
+const TableCard = ({ name, status, initials, seats }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     if (status === "Booked") return;
@@ -49,11 +49,17 @@ const TableCard = ({ name, status, initials }) => {
           className={
             "text-[#FFFFFF] rounded-full w-[60px] h-[60px] items-center justify-center flex"
           }
-          style={{ padding: "1rem", backgroundColor: getRandomBG() }}
+          style={{ padding: "1rem", backgroundColor: getBgColor() }}
         >
           {initials}
         </h1>
       </div>
+      <p
+        className="text-[#ababab]"
+        style={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+      >
+        Seats: <span className="text-[#FFFFFF]">{seats}</span>
+      </p>
     </div>
   );
 };

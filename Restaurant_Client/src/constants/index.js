@@ -83,16 +83,16 @@ export const popularDishes = [
 ]
 
 export const tables = [
-    { id: 1, name: "Table 1", status: "Booked", initials: "AM" },
-    { id: 2, name: "Table 2", status: "Available", initials: "JS" },
-    { id: 3, name: "Table 3", status: "Booked", initials: "LW" },
-    { id: 4, name: "Table 4", status: "Available", initials: "KH" },
-    { id: 5, name: "Table 5", status: "Booked", initials: "RT" },
-    { id: 6, name: "Table 6", status: "Available", initials: "MC" },
-    { id: 7, name: "Table 7", status: "Booked", initials: "SG" },
-    { id: 8, name: "Table 8", status: "Available", initials: "PL" },
-    { id: 9, name: "Table 9", status: "Booked", initials: "DN" },
-    { id: 10, name: "Table 10", status: "Available", initials: "VB" },
+    { id: 1, name: "Table 1", status: "Booked", initials: "AM", seats: 4 },
+    { id: 2, name: "Table 2", status: "Available", initials: "JS", seats: 2 },
+    { id: 3, name: "Table 3", status: "Booked", initials: "LW", seats: 6 },
+    { id: 4, name: "Table 4", status: "Available", initials: "KH", seats: 8 },
+    { id: 5, name: "Table 5", status: "Booked", initials: "RT", seats: 2 },
+    { id: 6, name: "Table 6", status: "Available", initials: "MC", seats: 4 },
+    { id: 7, name: "Table 7", status: "Booked", initials: "SG", seats: 6 },
+    { id: 8, name: "Table 8", status: "Available", initials: "PL", seats: 8 },
+    { id: 9, name: "Table 9", status: "Booked", initials: "DN", seats: 2 },
+    { id: 10, name: "Table 10", status: "Available", initials: "VB", seats: 4 },
 ]
 
 export const desserts = [
