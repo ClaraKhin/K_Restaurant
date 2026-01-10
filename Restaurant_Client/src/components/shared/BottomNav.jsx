@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import {
   HomeOutlined,
   CoffeeOutlined,
@@ -8,13 +10,17 @@ import {
   AlertFilled,
 } from "@ant-design/icons";
 import Modal from "./Modal";
+import { setCustomer } from "../../redux/slices/customerSlice";
 
 const BottomNav = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hover, setHover] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -25,6 +31,11 @@ const BottomNav = () => {
   };
 
   const isActive = (path) => location.pathname === path;
+
+  const handleCreateOrder = () => {
+    dispatch(setCustomer({ name, phone, guests: guestCount }));
+    navigate("/tables");
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
@@ -139,6 +150,8 @@ const BottomNav = () => {
           >
             <input
               type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter Customer Name"
               id=""
               className="bg-transparent focus:outline-none"
@@ -174,6 +187,8 @@ const BottomNav = () => {
           >
             <input
               type="number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="+95-1234567890"
               id=""
               className="bg-transparent focus:outline-none"
@@ -231,7 +246,7 @@ const BottomNav = () => {
           </div>
         </div>
         <button
-          onClick={() => navigate("/tables")}
+          onClick={handleCreateOrder}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
           className="w-full cursor-pointer"

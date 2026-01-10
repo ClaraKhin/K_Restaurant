@@ -1,6 +1,10 @@
-import React from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { formatDate, getAvatarName } from "../../utils";
 
 const CustomerInfo = () => {
+  const [dateTime, setDateTime] = useState(new Date());
+  const customerData = useSelector((state) => state.customer);
   return (
     <div
       className="flex items-center justify-between"
@@ -16,7 +20,7 @@ const CustomerInfo = () => {
           className="text-[#ffffff] tracking-wide"
           style={{ fontSize: "1rem", fontWeight: 600 }}
         >
-          Customer Name
+          {customerData.customerName || "Customer Name"}
         </h1>
         <p
           className="text-[#ababab]"
@@ -26,7 +30,7 @@ const CustomerInfo = () => {
             marginTop: "0.25rem",
           }}
         >
-          #101/Dine in
+          #{customerData.orderId || "N/A"} / Dine in
         </p>
         <p
           className="text-[#ababab]"
@@ -36,7 +40,7 @@ const CustomerInfo = () => {
             marginTop: "0.5rem",
           }}
         >
-          Jan 19, 2026 05:34PM{" "}
+          {formatDate(dateTime)}
         </p>
       </div>
       <button
@@ -49,7 +53,7 @@ const CustomerInfo = () => {
           borderRadius: "0.5rem",
         }}
       >
-        CN
+        {getAvatarName(customerData.customerName) || "CN"}
       </button>
     </div>
   );

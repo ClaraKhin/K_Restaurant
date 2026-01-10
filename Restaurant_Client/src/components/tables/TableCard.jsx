@@ -2,16 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 // import { CheckOutlined } from "@ant-design/icons";
 import { getBgColor } from "../../utils";
+import { useDispatch } from "react-redux";
+import { updateTable } from "../../redux/slices/customerSlice";
 
 const TableCard = ({ name, status, initials, seats }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleClick = () => {
+  const handleClick = (name) => {
     if (status === "Booked") return;
+    dispatch(updateTable({ tableNo: name }));
     navigate(`/menu`);
+
   };
   return (
     <div
-      onClick={handleClick}
+      onClick={() => handleClick(name)}
       className="w-[450px] bg-[#1d1716] hover:bg-[#3A322E] rounded-lg cursor-pointer"
       style={{ padding: "1rem" }}
     >

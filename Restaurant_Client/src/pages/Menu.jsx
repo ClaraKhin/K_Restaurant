@@ -10,8 +10,10 @@ import MenuContainer from "../components/menu/MenuContainer";
 import CustomerInfo from "../components/menu/CustomerInfo";
 import CartInfo from "../components/menu/CartInfo";
 import BillInfo from "../components/menu/BillInfo";
+import { useSelector } from "react-redux";
 
 const Menu = () => {
+  const customerData = useSelector((state) => state.customer); // Access the customer data
   return (
     <section
       className="bg-[#2a221e] min-h-screen overflow-y-auto flex gap-3"
@@ -51,13 +53,13 @@ const Menu = () => {
                   className=" text-[#FFFFFF]"
                   style={{ fontSize: "1rem", fontWeight: 600 }}
                 >
-                  Customer Name
+                  {customerData.customerName || "Customer Name"}
                 </h1>
                 <p
                   className="text-[#ababab]"
                   style={{ fontSize: "0.75rem", fontWeight: 500 }}
                 >
-                  Table No: 2
+                  {customerData.tableNo || "N/A"}
                 </p>
               </div>
             </div>
