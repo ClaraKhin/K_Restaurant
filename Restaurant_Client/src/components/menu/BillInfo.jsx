@@ -1,6 +1,13 @@
-import React from "react";
+import React, { use } from "react";
+import { useSelector } from "react-redux";
+import { getTotalPrice } from "../../redux/slices/cartSlice";
 
 const BillInfo = () => {
+  const cartData = useSelector((state) => state.cart);
+  const total = useSelector(getTotalPrice);
+  const taxRate = 5.25;
+  const tax = (total * taxRate) / 100;
+  const totalPriceWithTax = total + tax;
   return (
     <>
       <div
@@ -15,13 +22,13 @@ const BillInfo = () => {
           className="text-[#ababab]"
           style={{ fontSize: "0.75rem", fontWeight: 500, marginTop: "0.5rem" }}
         >
-          Items(4)
+          Items({cartData.length})
         </p>
         <h1
           className="text-[#ffffff]"
           style={{ fontSize: "1rem", fontWeight: 700 }}
         >
-          $240
+          ${total.toFixed(2)}
         </h1>
       </div>
 
@@ -37,13 +44,35 @@ const BillInfo = () => {
           className="text-[#ababab]"
           style={{ fontSize: "0.75rem", fontWeight: 500, marginTop: "0.5rem" }}
         >
-          Tax(5.25%)
+          Tax
         </p>
         <h1
           className="text-[#ffffff]"
           style={{ fontSize: "1rem", fontWeight: 700 }}
         >
-          $24
+          ${tax.toFixed(2)}
+        </h1>
+      </div>
+
+      <div
+        className="flex items-center justify-between"
+        style={{
+          paddingLeft: "1.25rem",
+          paddingRight: "1.25rem",
+          marginTop: "0.5rem",
+        }}
+      >
+        <p
+          className="text-[#ababab]"
+          style={{ fontSize: "0.75rem", fontWeight: 500, marginTop: "0.5rem" }}
+        >
+          Total With Tax
+        </p>
+        <h1
+          className="text-[#ffffff]"
+          style={{ fontSize: "1rem", fontWeight: 700 }}
+        >
+          ${totalPriceWithTax.toFixed(2)}
         </h1>
       </div>
 

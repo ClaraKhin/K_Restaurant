@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { menus } from "../../constants";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { addItems } from "../../redux/slices/cartSlice";
 // import { getBgColor } from "../../utils";
 
 const MenuContainer = () => {
   const [selectedMenu, setSelectedMenu] = useState(menus[0]);
   const [hover, setHover] = useState(null);
   const [itemCount, setItemCount] = useState({});
+  const dispatch = useDispatch();
 
   const getUniqueId = (menuId, itemId) => {
     // Create a unique ID by combining menuId and itemId
@@ -30,6 +33,27 @@ const MenuContainer = () => {
       [uniqueId]: (prev[uniqueId] || 0) > 0 ? prev[uniqueId] - 1 : 0,
     }));
   };
+
+  const handleAddToCart = (item) => {
+    const uniqueId = getUniqueId(selectedMenu.id, item.id);
+    const count = itemCount[uniqueId] || 0;
+    if (count === 0) return;
+    const { name, price } = item;
+    const newObj = {
+      id: new Date().getTime(),
+      name,
+      pricePerQuantity: price,
+      quantity: count,
+      price: price * count,
+    };
+
+    dispatch(addItems(newObj));
+    setItemCount((prev) => ({
+      ...prev,
+      [uniqueId]: 0,
+    }));
+  };
+
   return (
     <>
       <div
@@ -49,8 +73,7 @@ const MenuContainer = () => {
               style={{ padding: "1rem", backgroundColor: menu.bgColor }}
               onClick={() => {
                 setSelectedMenu(menu);
-                setItemId(0);
-                setItemCount(0);
+                setItemCount({});
               }}
             >
               <div className="flex items-center justify-between w-full">
@@ -98,7 +121,7 @@ const MenuContainer = () => {
               onMouseEnter={() => setHover(item.id)}
               onMouseLeave={() => setHover(null)}
               key={item.id}
-              className="flex flex-col items-start justify-between h-[150px] rounded-lg cursor-pointer"
+              className="flex flex-col items-start justify-between h-[150px] rounded-lg"
               style={{
                 padding: "1rem",
                 backgroundColor: hover === item.id ? "#7d7c7c3b" : "#1d1716",
@@ -112,12 +135,14 @@ const MenuContainer = () => {
                   {item.name}
                 </h1>
                 <button
+                  onClick={() => handleAddToCart(item)}
                   style={{
                     backgroundColor: "#2e4a40",
                     color: "#02ca3a",
                     padding: "0.5rem",
                     borderRadius: "0.5rem",
                     width: "2.5rem",
+                    cursor: "pointer",
                   }}
                 >
                   <ShoppingCartOutlined style={{ fontSize: "1.125rem" }} />
@@ -128,7 +153,7 @@ const MenuContainer = () => {
                   className="text-[#ffffff] "
                   style={{ fontSize: "1rem", fontWeight: 700 }}
                 >
-                  ${item.price}
+                  {count === 0 ? item.price : (item.price * count).toFixed(2)}
                 </p>
 
                 <div
