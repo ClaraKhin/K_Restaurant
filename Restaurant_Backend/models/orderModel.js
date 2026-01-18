@@ -21,7 +21,8 @@ const orderSchema = new mongoose.Schema({
         tax: { type: Number, required: true },
         totalWithTax: { type: Number, required: true }
     },
-    items: []
+    items: [],
+    table: { type: mongoose.Schema.Types.ObjectId, ref: "Table" } // Reference to the Table model for the associated table
 }, { timestamps: true });
 
 
