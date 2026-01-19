@@ -1,9 +1,30 @@
-import React from "react";
+import { useState } from "react";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    role: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  const handleRoleSelection = (selectedRole) => {
+    setFormData({ ...formData, role: selectedRole });
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label
             className="block text-[#ababab]"
@@ -28,6 +49,8 @@ const Register = () => {
             <input
               type="text"
               name="name"
+              value={formData.name}
+              onChange={handleChange}
               placeholder="Enter name"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
@@ -60,6 +83,8 @@ const Register = () => {
             <input
               type="text"
               name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter email address"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
@@ -92,6 +117,8 @@ const Register = () => {
             <input
               type="number"
               name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               placeholder="Enter phone number"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
@@ -125,6 +152,8 @@ const Register = () => {
             <input
               type="password"
               name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Enter password"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
@@ -132,7 +161,6 @@ const Register = () => {
             />
           </div>
         </div>
-        
 
         <div>
           <label
@@ -157,16 +185,19 @@ const Register = () => {
                 <button
                   key={role}
                   type="button"
+                  onClick={() => handleRoleSelection(role)}
                   className="cursor-pointer"
                   style={{
                     paddingLeft: "1rem",
                     paddingRight: "1rem",
                     paddingTop: "0.75rem",
                     paddingBottom: "0.75rem",
-                    backgroundColor: "#1f1f1f",
+                    backgroundColor: ` ${
+                      formData.role === role ? "#3730A3" : "#1f1f1f"
+                    }`,
                     width: "100%",
                     borderRadius: "0.5rem",
-                    color: "#ababab",
+                    color: `${formData.role === role ? "#ffffff" : "#ababab"}`,
                   }}
                 >
                   {role}

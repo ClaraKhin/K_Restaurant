@@ -1,9 +1,23 @@
-import React from "react";
+import { useState } from "react";
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label
             className="block text-[#ababab]"
@@ -29,6 +43,8 @@ const Login = () => {
             <input
               type="text"
               name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter email address"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
@@ -62,6 +78,8 @@ const Login = () => {
             <input
               type="password"
               name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Enter password"
               className="focus:outline-none"
               style={{ flex: 1, color: "#ffffff" }}
