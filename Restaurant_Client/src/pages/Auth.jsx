@@ -2,9 +2,12 @@ import { useState } from "react";
 import golden from "../assets/images/Golden.png";
 import logo from "../assets/images/Golden_Dynasty.png";
 import Register from "../components/auth/Register";
+import Login from "../components/auth/Login";
 
 const Auth = () => {
   const [hover, setHover] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+
   return (
     <div className="flex w-full min-h-screen">
       {/* left Section */}
@@ -88,20 +91,21 @@ const Auth = () => {
             marginBottom: "2.5rem",
           }}
         >
-          Employee Registeration
+          {isRegister ? "Employee Registeration" : "Employee Sign In"}
         </h2>
 
-        {/* Components */}
-        {/* Register */}
-        <Register />
+        {isRegister ? <Register /> : <Login />}
 
         <div className="flex justify-center" style={{ marginTop: "4rem" }}>
           <p
             className="text-[#ababab]"
             style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}
           >
-            Already have an account?
+            {isRegister
+              ? "Already have an account? "
+              : "Don't have an account? "}
             <a
+              onClick={() => setIsRegister(!isRegister)}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
               href="#"
@@ -112,7 +116,7 @@ const Auth = () => {
                 cursor: "pointer",
               }}
             >
-              Sign in
+              {isRegister ? "Sign In" : "Sign Up"}
             </a>
           </p>
         </div>
