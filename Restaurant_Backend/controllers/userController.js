@@ -67,6 +67,15 @@ const login = async (req, res, next) => {
 
 }
 
+const logout = async (req, res, next) => {
+    try {
+        res.clearCookie("accessToken");
+        res.status(200).json({ success: true, message: "User is successfully logged out!" });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // Middleware to verify the access token and attach the user object to the request object 
 const getUserData = async (req, res, next) => {
     try {
@@ -77,4 +86,4 @@ const getUserData = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login, getUserData };
+module.exports = { register, login, logout, getUserData };
