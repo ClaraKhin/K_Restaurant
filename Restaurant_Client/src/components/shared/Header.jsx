@@ -6,10 +6,32 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/images/Golden_Dynasty.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "../../https/index";
+import { removeUser } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const userData = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutMutation = useMutation({
+    mutationFn: () => logout(),
+    onSuccess: (data) => {
+      console.log(data);
+      dispatch(removeUser());
+      navigate("/auth");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
   return (
     <header
       className="flex justify-between items-center  bg-[#1d1716]"
@@ -72,7 +94,11 @@ const Header = () => {
             </p>
           </div>
 
-          <LogoutOutlined className="text-2xl" style={{ color: "#FFFFFF", marginLeft: "0.5rem" }} />
+          <LogoutOutlined
+            onClick={handleLogout}
+            className="text-2xl"
+            style={{ color: "#FFFFFF", marginLeft: "0.5rem" }}
+          />
         </div>
       </div>
     </header>
