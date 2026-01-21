@@ -94,7 +94,7 @@ const Auth = () => {
           {isRegister ? "Employee Registeration" : "Employee Sign In"}
         </h2>
 
-        {isRegister ? <Register /> : <Login />}
+        {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
 
         <div className="flex justify-center" style={{ marginTop: "4rem" }}>
           <p
