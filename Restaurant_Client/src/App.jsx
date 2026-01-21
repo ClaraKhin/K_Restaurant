@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
@@ -11,24 +12,63 @@ import Tables from "./pages/Tables";
 import Menu from "./pages/Menu";
 import Auth from "./pages/Auth";
 import Header from "./components/shared/Header";
+import { useSelector } from "react-redux";
 
 function Layout() {
   const location = useLocation();
   const hideHeader = ["/auth"];
+  const { isAuth } = useSelector((state) => state.user);
   return (
     <>
       {!hideHeader.includes(location.pathname) && <Header />}
       {/* hide header on auth page */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/tables" element={<Tables />} />
-        <Route path="/menu" element={<Menu />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/auth" element={isAuth ? <Navigate to="/" /> : <Auth />} />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tables"
+          element={
+            <ProtectedRoute>
+              <Tables />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/menu"
+          element={
+            <ProtectedRoute>
+              <Menu />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
   );
+}
+
+function ProtectedRoute({ children }) {
+  const { isAuth } = useSelector((state) => state.user);
+  if (!isAuth) {
+    return <Navigate to="/auth" />;
+  } // if user is not authenticated, redirect to auth page
+
+  return children;
 }
 
 function App() {
