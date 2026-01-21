@@ -13,11 +13,16 @@ import Menu from "./pages/Menu";
 import Auth from "./pages/Auth";
 import Header from "./components/shared/Header";
 import { useSelector } from "react-redux";
+import useLoadData from "./hooks/useLoadData";
+import FullScreenLoader from "./components/shared/FullScreenLoader";
 
 function Layout() {
+  const { isLoading } = useLoadData();
   const location = useLocation();
   const hideHeader = ["/auth"];
   const { isAuth } = useSelector((state) => state.user);
+
+  if (isLoading) return <FullScreenLoader />;
   return (
     <>
       {!hideHeader.includes(location.pathname) && <Header />}
