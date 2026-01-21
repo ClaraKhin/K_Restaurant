@@ -1,12 +1,40 @@
+import { useMutation } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
+import { register } from "../../https/index";
 
-const Register = () => {
+const Register = ({ setIsRegister }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     role: "",
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: (reqData) => register(reqData),
+    onSuccess: (res) => {
+      const { data } = res;
+      console.log(data);
+      enqueueSnackbar(data.message, { variant: "success" });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: "",
+      });
+
+      setTimeout(() => {
+        setIsRegister(false);
+      }, 1500);
+    },
+    onError: (error) => {
+      const { response } = error;
+      console.log(response);
+      enqueueSnackbar(response.data.message, { variant: "error" });
+    },
   });
 
   const handleChange = (e) => {
@@ -16,6 +44,7 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    registerMutation.mutate(formData);
   };
 
   const handleRoleSelection = (selectedRole) => {
