@@ -1,8 +1,15 @@
 import React from "react";
-import { SearchOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  BellOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import logo from "../../assets/images/Golden_Dynasty.png";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const userData = useSelector((state) => state.user);
   return (
     <header
       className="flex justify-between items-center  bg-[#1d1716]"
@@ -55,15 +62,17 @@ const Header = () => {
               className=" text-[#FFFFFF]"
               style={{ fontSize: "1rem", fontWeight: 600 }}
             >
-              Khin
+              {userData.name || "Test User"}
             </h1>
             <p
               className="text-[#ababab]"
               style={{ fontSize: "0.75rem", fontWeight: 500 }}
             >
-              Admin
+              {userData.role || "Role"}
             </p>
           </div>
+
+          <LogoutOutlined className="text-2xl" style={{ color: "#FFFFFF", marginLeft: "0.5rem" }} />
         </div>
       </div>
     </header>

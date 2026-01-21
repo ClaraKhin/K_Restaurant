@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Greetings = () => {
   const [dateTime, setDateTime] = useState(new Date());
+  const userData = useSelector((state) => state.user);
 
   // Update the date and time every second
   useEffect(() => {
@@ -53,7 +55,7 @@ const Greetings = () => {
           className="text-[#FFFFFF] tracking-wide"
           style={{ fontWeight: "600", fontSize: "1.5rem" }}
         >
-          Good Morning, Khin
+          Good Morning, {userData.name || "User"}
         </h1>
         <p className="text-[#ababab]" style={{ fontSize: "0.875rem" }}>
           Give your best services for customers 😊
