@@ -4,6 +4,7 @@ import {
   BellOutlined,
   UserOutlined,
   LogoutOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/images/Golden_Dynasty.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,8 +75,27 @@ const Header = () => {
         />
       </div>
       {/* Logged User Info */}
+
       <div className="flex items-center gap-4">
-        <BellOutlined style={{ color: "#FFFFFF" }} className="text-2xl" />
+        {userData.role === "Admin" && (
+          <div
+            onClick={() => navigate("/dashboard")}
+            className="bg-[#2A221E] rounded-[15px] cursor-pointer"
+            style={{ padding: "0.5rem" }}
+          >
+            <PieChartOutlined
+              style={{ color: "#FFFFFF" }}
+              className="text-2xl"
+            />
+          </div>
+        )}
+
+        <div
+          className="bg-[#2A221E] rounded-[15px] cursor-pointer"
+          style={{ padding: "0.5rem" }}
+        >
+          <BellOutlined style={{ color: "#FFFFFF" }} className="text-2xl" />
+        </div>
 
         <div className="flex items-center gap-3 cursor-pointer">
           <UserOutlined style={{ color: "#FFFFFF" }} className="text-2xl" />
