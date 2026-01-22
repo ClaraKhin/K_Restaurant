@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { SwitcherOutlined } from "@ant-design/icons";
+import { RetweetOutlined } from "@ant-design/icons";
 import { orders } from "../../constants";
 
 const RecentOrders = () => {
   const [hoverText, setHoverText] = useState(null);
+
+  const handleStatusChange = () => {};
   return (
     <div
       className=" bg-[#1D1716] "
@@ -49,10 +51,7 @@ const RecentOrders = () => {
                   <select
                     style={{
                       backgroundColor: "#2A221E",
-                      color:
-                        order.status === "Ready"
-                          ? "text-green-500"
-                          : "text-yellow-500",
+                      color: order.status === "Ready" ? "#22c55e" : "#facc15",
 
                       border: "2px solid #939191",
                       borderRadius: "0.5rem",
@@ -60,6 +59,7 @@ const RecentOrders = () => {
                       outline: "none",
                     }}
                     value={order.status}
+                    onChange={(e) => handleStatusChange(index, e.target.value)}
                   >
                     <option className="text-yellow-500" value="In Progress">
                       In Progress
@@ -84,7 +84,7 @@ const RecentOrders = () => {
                       cursor: "pointer",
                     }}
                   >
-                    <SwitcherOutlined style={{ fontSize: "1.5rem" }} />
+                    <RetweetOutlined style={{ fontSize: "1.5rem" }} />
                   </button>
                 </td>
               </tr>
