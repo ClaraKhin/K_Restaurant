@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import Metrics from "../components/dashboard/Metrics";
 import RecentOrders from "../components/dashboard/RecentOrders";
+import Modal from "../components/dashboard/Modal";
 
 const buttons = [
   {
@@ -30,9 +31,14 @@ const tabs = [
 ];
 
 const Dashboard = () => {
+  const [isTableModalOpen, setTableModalOpen] = useState(false);
   const [hover, setHover] = useState(null);
   const [hoverTab, setHoverTab] = useState(null);
   const [activeTab, setActiveTab] = useState("Metrics");
+
+  const handleOpenModal = (action) => {
+    if (action === "table") setTableModalOpen(true);
+  };
   return (
     <div className="bg-[#2A221E]" style={{ height: "calc(100vh - 5rem)" }}>
       <div
@@ -55,6 +61,7 @@ const Dashboard = () => {
                 key={id}
                 onMouseEnter={() => setHover(id)}
                 onMouseLeave={() => setHover(null)}
+                onClick={() => handleOpenModal(action)}
                 className="flex items-center gap-2"
                 style={{
                   backgroundColor: isHovered ? "#3A322E " : "#1D1716",
@@ -106,6 +113,8 @@ const Dashboard = () => {
       </div>
       {activeTab === "Metrics" && <Metrics />}
       {activeTab === "Orders" && <RecentOrders />}
+
+      {isTableModalOpen && <Modal setTableModalOpen={setTableModalOpen} />}
     </div>
   );
 };
