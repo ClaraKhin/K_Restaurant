@@ -1,13 +1,45 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { CloseCircleOutlined } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import { addTable } from "../../https";
+import { enqueueSnackbar } from "notistack";
 
 const Modal = ({ setTableModalOpen }) => {
+  const [tableData, setTableData] = useState({
+    tableNo: "",
+    seats: "",
+  });
   const [closeBtnHover, setCloseBtnHover] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setTableData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(tableData);
+    tableMutation.mutate(tableData);
+  };
 
   const handleCloseModal = () => {
     setTableModalOpen(false);
   };
+
+  const tableMutation = useMutation({
+    mutationFn: (reqData) => addTable(reqData),
+    onSuccess: (data) => {
+      setTableModalOpen(false);
+      enqueueSnackbar(data.message, { variant: "success" });
+    },
+    onError: (error) => {
+      const { data } = error.response;
+      enqueueSnackbar(data.message, { variant: "error" });
+      console.log(error);
+    },
+  });
+
   return (
     <div
       className="flex items-center justify-center z-50"
@@ -64,7 +96,11 @@ const Modal = ({ setTableModalOpen }) => {
 
         {/* Modal Body */}
 
-        <form className="space-y-4" style={{ marginTop: "2.5rem" }}>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+          style={{ marginTop: "2.5rem" }}
+        >
           <div>
             <label
               className="block text-[#ababab]"
@@ -90,6 +126,8 @@ const Modal = ({ setTableModalOpen }) => {
               <input
                 type="number"
                 name="tableNo"
+                value={tableData.tableNo}
+                onChange={handleInputChange}
                 className="focus:outline-none"
                 style={{ flex: 1, color: "#ffffff" }}
                 required
@@ -122,6 +160,8 @@ const Modal = ({ setTableModalOpen }) => {
               <input
                 type="number"
                 name="seats"
+                value={tableData.seats}
+                onChange={handleInputChange}
                 className="focus:outline-none"
                 style={{ flex: 1, color: "#ffffff" }}
                 required
