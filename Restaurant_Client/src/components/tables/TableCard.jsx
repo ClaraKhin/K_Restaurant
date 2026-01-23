@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 // import { CheckOutlined } from "@ant-design/icons";
 import { getBgColor } from "../../utils";
 import { useDispatch } from "react-redux";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import { updateTable } from "../../redux/slices/customerSlice";
 
 const TableCard = ({ name, status, initials, seats }) => {
@@ -12,7 +13,6 @@ const TableCard = ({ name, status, initials, seats }) => {
     if (status === "Booked") return;
     dispatch(updateTable({ tableNo: name }));
     navigate(`/menu`);
-
   };
   return (
     <div
@@ -28,6 +28,14 @@ const TableCard = ({ name, status, initials, seats }) => {
           className="text-[#FFFFFF]"
           style={{ fontSize: "1.25rem", fontWeight: 600 }}
         >
+          Table
+          <ArrowRightOutlined
+            style={{
+              color: "#ababab",
+              marginLeft: "0.5rem ",
+              marginRight: "0.5rem",
+            }}
+          />
           {name}
         </h1>
         <p
