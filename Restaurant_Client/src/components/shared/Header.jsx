@@ -44,7 +44,10 @@ const Header = () => {
       }}
     >
       {/* logo */}
-      <div className="flex items-center gap-2 ">
+      <div
+        onClick={() => navigate("/")}
+        className="flex items-center gap-2 cursor-pointer "
+      >
         <img src={logo} alt="logo" className="h-15 w-15 rounded-full" />
         <h1
           className="text-[#FFFFFF]"

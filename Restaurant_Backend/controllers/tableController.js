@@ -1,6 +1,7 @@
 const createHttpError = require("http-errors");
 const Table = require("../models/tableModel");
 const mongoose = require("mongoose");
+const Order = require("../models/orderModel");
 
 const addTable = async (req, res, next) => {
     try {
@@ -31,7 +32,10 @@ const addTable = async (req, res, next) => {
 const getTables = async (req, res, next) => {
     try {
 
-        const tables = await Table.find();
+        const tables = await Table.find().populate({
+            path: "currentOrder",
+            select: "customerDetails orderStatus orderDate bills items"
+        });
         res.status(200).json({ success: true, data: tables });
 
     } catch (error) {
@@ -51,12 +55,31 @@ const updateTable = async (req, res, next) => {
             const error = createHttpError(404, "Invalid id!");
             return next(error);
         }
-        //find the table and update the status and currentOrder of the table 
-        const table = await Table.findById(id, { status, currentOrder: orderId }); // Find the table by ID 
+
+        const table = await Table.findByIdAndUpdate(
+            id,
+            { status, currentOrder: orderId },
+            { new: true }
+        );
+
         if (!table) {
             const error = createHttpError(404, "Table not found!");
             return next(error);
         }
+
+        if (orderId) {
+            // Order က table field ကိုလည်း update
+            await Order.findByIdAndUpdate(orderId, { table: id });
+        } else {
+            // orderId null ဆိုရင် ဒီ table နဲ့ချိတ်ထားတဲ့ order တွေကို ဖြုတ်
+            await Order.updateMany({ table: id }, { $unset: { table: "" } });
+        }
+
+        // Populate လုပ်ပြီး response ပြန်
+        const updatedTable = await Table.findById(id).populate({
+            path: "currentOrder",
+            select: "customerDetails orderStatus orderDate bills items"
+        });
 
         res.status(200).json({ success: true, message: "Table is successfully updated", data: table });
 
