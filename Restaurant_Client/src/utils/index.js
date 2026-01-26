@@ -37,3 +37,4 @@ export const formatDate = (date) => {
         "0"
     )}, ${date.getFullYear()}`;
 };
+

@@ -10,6 +10,10 @@ import { enqueueSnackbar } from "notistack";
 const Tables = () => {
   const [status, setStatus] = useState("all");
 
+  // useEffect(() => {
+  //   document.title = "POS | Tables";
+  // }, []);
+
   const { data: resData, isError } = useQuery({
     queryKey: ["tables"],
     queryFn: async () => {
@@ -96,6 +100,7 @@ const Tables = () => {
         {resData?.data.data.map((table) => {
           return (
             <TableCard
+              key={table._id}
               id={table._id}
               name={table.tableNo}
               status={table.status}

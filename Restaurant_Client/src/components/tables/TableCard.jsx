@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 // import { CheckOutlined } from "@ant-design/icons";
-import { getBgColor } from "../../utils";
+import { getBgColor, getAvatarName } from "../../utils";
 import { useDispatch } from "react-redux";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { updateTable } from "../../redux/slices/customerSlice";
@@ -11,7 +11,9 @@ const TableCard = ({ name, status, initials, seats }) => {
   const navigate = useNavigate();
   const handleClick = (name) => {
     if (status === "Booked") return;
-    dispatch(updateTable({ tableNo: name }));
+
+    const table = { tableId: id, tableNo: name };
+    dispatch(updateTable({ table }));
     navigate(`/menu`);
   };
   return (
@@ -64,7 +66,7 @@ const TableCard = ({ name, status, initials, seats }) => {
           }
           style={{ padding: "1rem", backgroundColor: getBgColor() }}
         >
-          {initials}
+          {getAvatarName(initials) || "N/A"}
         </h1>
       </div>
       <p
