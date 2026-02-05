@@ -1,27 +1,29 @@
-const stripe = require("stripe");
+const Stripe = require("stripe");
 const config = require("../config/config");
 
+const stripe = Stripe(config.stripeSecretKey);
+
 const createOrder = async (req, res, next) => {
-    const stripePay = new stripe(
-        {
-            key_id: config.stripePublishableKey,
-            key_secret: config.stripeSecretKey,
-        }
-    )
     try {
         const { amount } = req.body;
-        const options = {
-            amount: amount * 100, // Convert to cents
-            currency: "usd",
-            receipt: `receipt_${Date.now()}`,
-        }
 
-        const order = await stripePay.orders.create(options);
-        res.status(201).json({ success: true, order });
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount * 100,
+            currency: "usd",
+            metadata: {
+                receipt: `receipt_${Date.now()}`
+            }
+        });
+ 
+        res.status(200).json({
+            success: true,
+            order: paymentIntent,
+        });
 
     } catch (error) {
+        console.log(error);
         next(error);
     }
 };
 
-module.exports = { createOrder };  
+module.exports = { createOrder };
