@@ -8,13 +8,13 @@ const createOrder = async (req, res, next) => {
         const { amount } = req.body;
 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount * 100,
+            amount: Math.round(amount * 100),
             currency: "usd",
             metadata: {
                 receipt: `receipt_${Date.now()}`
             }
         });
- 
+
         res.status(200).json({
             success: true,
             order: paymentIntent,

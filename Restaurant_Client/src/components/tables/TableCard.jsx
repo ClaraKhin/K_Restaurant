@@ -6,14 +6,14 @@ import { useDispatch } from "react-redux";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { updateTable } from "../../redux/slices/customerSlice";
 
-const TableCard = ({ name, status, initials, seats }) => {
+const TableCard = ({ id, name, status, initials, seats }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleClick = (name) => {
     if (status === "Booked") return;
 
     const table = { tableId: id, tableNo: name };
-    dispatch(updateTable({ table }));
+    dispatch(updateTable(table));
     navigate(`/menu`);
   };
   return (
