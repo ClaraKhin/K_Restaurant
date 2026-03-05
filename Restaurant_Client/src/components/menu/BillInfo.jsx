@@ -1,57 +1,31 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getTotalPrice } from "../../redux/slices/cartSlice";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
-import { loadScript } from "@stripe/stripe-js";
-import { createOrderStripe } from "../../https";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { createOrderStripe } from "../../https/index";
 import { removeItem } from "../../redux/slices/cartSlice";
 import { removeCustomer } from "../../redux/slices/customerSlice";
 import { useMutation } from "@tanstack/react-query";
+import CheckoutForm from "./CheckoutForm";
+import Modal from "../shared/Modal";
 
-const stripePromise = loadScript(import.meta.env.STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const BillInfo = () => {
   const [paymentMethod, setPaymentMethod] = useState();
+  const [showStripeModal, setShowStripeModal] = useState(false);
+  const [clientSecret, setClientSecret] = useState(null);
   const [orderInfo, setOrderInfo] = useState();
   const dispatch = useDispatch();
   const cartData = useSelector((state) => state.cart);
+  const customerData = useSelector((state) => state.customer);
   const total = useSelector(getTotalPrice);
   const taxRate = 5.25;
   const tax = (total * taxRate) / 100;
   const totalPriceWithTax = total + tax;
-
-  const orderMutation = useMutation({
-    mutationFn: (reqData) => addOrder(reqData),
-    onSuccess: (res) => {
-      const { data } = res.data;
-      setOrderInfo(data);
-
-      // Update Table
-      const tableData = {
-        status: "Booked",
-        orderId: data._id,
-        tableId: data.table,
-      };
-      tableUpdateMutation.mutate(tableData);
-
-      enqueueSnackbar("Order Placed!", { variant: "success" });
-      setShowInvoice(true);
-    },
-    onError: (error) => {
-      console.log(error);
-      enqueueSnackbar("Failed to place order!", { variant: "error" });
-    },
-  });
-
-  const tableUpdateMutation = useMutation({
-    mutationFn: (reqData) => updateTable(reqData),
-    onSuccess: () => {
-      dispatch(removeCustomer());
-      dispatch(removeItem());
-    },
-    onError: (error) => console.log(error),
-  });
 
   const handlePlaceOrder = async () => {
     if (!paymentMethod) {
@@ -86,62 +60,14 @@ const BillInfo = () => {
     // Online Payment with Stripe
     if (paymentMethod === "Online") {
       try {
-        const { data } = await createOrderStripe({ amount: totalPriceWithTax });
-        if (!data) {
-          enqueueSnackbar("Failed to create Stripe payment!", {
-            variant: "error",
-          });
-          return;
-        }
-
-        const stripe = window.Stripe(
-          import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-        );
-
-        const { error, paymentIntent } = await stripe.confirmCardPayment(
-          data.order.client_secret,
-          {
-            payment_method: {
-              card: { token: data.token }, // If using tokenized card input
-              billing_details: { name: customerData.customerName },
-            },
-          }
-        );
-
-        if (error) {
-          enqueueSnackbar("Payment failed. Please try again.", {
-            variant: "error",
-          });
-        } else {
-          enqueueSnackbar("Payment successful!", { variant: "success" });
-
-          const orderData = {
-            customerDetails: {
-              name: customerData.customerName,
-              phone: customerData.customerPhone,
-              guests: customerData.guests,
-            },
-            orderStatus: "In Progress",
-            bills: {
-              total,
-              tax,
-              totalWithTax,
-            },
-            items: cartData,
-            table: customerData.table.tableId,
-            paymentMethod,
-            paymentData: {
-              stripe_payment_id: paymentIntent.id,
-            },
-          };
-
-          orderMutation.mutate(orderData);
-        }
-      } catch (err) {
-        console.log(err);
-        enqueueSnackbar("Stripe payment failed. Please try again.", {
-          variant: "error",
+        const { data } = await createOrderStripe({
+          amount: totalPriceWithTax,
         });
+
+        setClientSecret(data.clientSecret);
+        setShowStripeModal(true); // open popup
+      } catch (err) {
+        enqueueSnackbar("Failed to start payment", { variant: "error" });
       }
     }
   };
@@ -282,6 +208,7 @@ const BillInfo = () => {
           Print Receipt
         </button>
         <button
+          onClick={handlePlaceOrder}
           style={{
             backgroundColor: "#F6B100",
             color: "#1F1F1F",
@@ -298,6 +225,20 @@ const BillInfo = () => {
           Place Order
         </button>
       </div>
+      <Modal
+        title="Card Payment"
+        isOpen={showStripeModal}
+        onClose={() => setShowStripeModal(false)}
+      >
+        {clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <CheckoutForm
+              clientSecret={clientSecret}
+              onClose={() => setShowStripeModal(false)}
+            />
+          </Elements>
+        )}
+      </Modal>
     </>
   );
 };
