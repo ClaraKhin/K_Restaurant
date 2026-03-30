@@ -16,3 +16,4 @@ export const getTables = () => api.get("/api/table");
 
 //payment endpoints
 export const createOrderStripe = (data) => api.post("/api/payment/create-order", data);
+export const verifyPayment = (data) => api.post("/api/payment/verify-payment", data);

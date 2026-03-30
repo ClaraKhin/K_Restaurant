@@ -3,20 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { getTotalPrice } from "../../redux/slices/cartSlice";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
-import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { createOrderStripe } from "../../https/index";
 import { removeItem } from "../../redux/slices/cartSlice";
 import { removeCustomer } from "../../redux/slices/customerSlice";
 import { useMutation } from "@tanstack/react-query";
-import CheckoutForm from "./CheckoutForm";
 import Modal from "../shared/Modal";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const BillInfo = () => {
   const [paymentMethod, setPaymentMethod] = useState();
-  const [showStripeModal, setShowStripeModal] = useState(false);
+
   const [clientSecret, setClientSecret] = useState(null);
   const [orderInfo, setOrderInfo] = useState();
   const dispatch = useDispatch();
@@ -53,7 +51,7 @@ const BillInfo = () => {
         table: customerData.table.tableId,
         paymentMethod,
       };
-      orderMutation.mutate(orderData);
+      console.log("Order Data:", orderData);
       return;
     }
 
@@ -64,8 +62,17 @@ const BillInfo = () => {
           amount: totalPriceWithTax,
         });
 
-        setClientSecret(data.clientSecret);
-        setShowStripeModal(true); // open popup
+        console.log("Stripe Session Created:", data);
+
+        const stripe = await stripePromise;
+
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
+        });
+
+        if (result.error) {
+          enqueueSnackbar(result.error.message, { variant: "error" });
+        }
       } catch (err) {
         enqueueSnackbar("Failed to start payment", { variant: "error" });
       }
@@ -225,20 +232,6 @@ const BillInfo = () => {
           Place Order
         </button>
       </div>
-      <Modal
-        title="Card Payment"
-        isOpen={showStripeModal}
-        onClose={() => setShowStripeModal(false)}
-      >
-        {clientSecret && (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm
-              clientSecret={clientSecret}
-              onClose={() => setShowStripeModal(false)}
-            />
-          </Elements>
-        )}
-      </Modal>
     </>
   );
 };

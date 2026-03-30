@@ -8,6 +8,7 @@ const config = Object.freeze({
     accessTokenSecret: process.env.JWT_SECRET || "secret",
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+    clientURL: process.env.CLIENT_URL,
 });
 
 module.exports = config;
