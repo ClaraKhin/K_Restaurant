@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
 import Dashboard from "./pages/Dashboard";
+import PaymentCancel from "./pages/PaymentCancel";
 
 function Layout() {
   const { isLoading } = useLoadData();
@@ -67,6 +68,14 @@ function Layout() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cancel"
+          element={
+            <ProtectedRoute>
+              <PaymentCancel />
             </ProtectedRoute>
           }
         />

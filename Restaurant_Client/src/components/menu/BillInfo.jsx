@@ -1,23 +1,12 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getTotalPrice } from "../../redux/slices/cartSlice";
 import { enqueueSnackbar } from "notistack";
-import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
 import { createOrderStripe } from "../../https/index";
-import { removeItem } from "../../redux/slices/cartSlice";
-import { removeCustomer } from "../../redux/slices/customerSlice";
-import { useMutation } from "@tanstack/react-query";
-import Modal from "../shared/Modal";
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const BillInfo = () => {
   const [paymentMethod, setPaymentMethod] = useState();
-
-  const [clientSecret, setClientSecret] = useState(null);
-  const [orderInfo, setOrderInfo] = useState();
-  const dispatch = useDispatch();
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const cartData = useSelector((state) => state.cart);
   const customerData = useSelector((state) => state.customer);
   const total = useSelector(getTotalPrice);
@@ -26,6 +15,8 @@ const BillInfo = () => {
   const totalPriceWithTax = total + tax;
 
   const handlePlaceOrder = async () => {
+    if (isPlacingOrder) return;
+
     if (!paymentMethod) {
       enqueueSnackbar("Please select a payment method!", {
         variant: "warning",
@@ -45,7 +36,7 @@ const BillInfo = () => {
         bills: {
           total,
           tax,
-          totalWithTax,
+          totalWithTax: totalPriceWithTax,
         },
         items: cartData,
         table: customerData.table.tableId,
@@ -57,24 +48,24 @@ const BillInfo = () => {
 
     // Online Payment with Stripe
     if (paymentMethod === "Online") {
+      setIsPlacingOrder(true);
       try {
-        const { data } = await createOrderStripe({
-          amount: totalPriceWithTax,
-        });
-
+        const { data } = await createOrderStripe({ amount: totalPriceWithTax });
         console.log("Stripe Session Created:", data);
 
-        const stripe = await stripePromise;
-
-        const result = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-
-        if (result.error) {
-          enqueueSnackbar(result.error.message, { variant: "error" });
+        if (!data?.url) {
+          enqueueSnackbar("Payment URL not found", { variant: "error" });
+          return;
         }
+
+        window.location.assign(data.url);
       } catch (err) {
-        enqueueSnackbar("Failed to start payment", { variant: "error" });
+        console.error(err);
+        const message =
+          err?.response?.data?.message || "Failed to start payment";
+        enqueueSnackbar(message, { variant: "error" });
+      } finally {
+        setIsPlacingOrder(false);
       }
     }
   };
@@ -216,6 +207,7 @@ const BillInfo = () => {
         </button>
         <button
           onClick={handlePlaceOrder}
+          disabled={isPlacingOrder}
           style={{
             backgroundColor: "#F6B100",
             color: "#1F1F1F",
@@ -226,10 +218,11 @@ const BillInfo = () => {
             width: "100%",
             borderRadius: "0.5rem",
             fontWeight: 600,
-            cursor: "pointer",
+            cursor: isPlacingOrder ? "not-allowed" : "pointer",
+            opacity: isPlacingOrder ? 0.7 : 1,
           }}
         >
-          Place Order
+          {isPlacingOrder ? "Processing..." : "Place Order"}
         </button>
       </div>
     </>
