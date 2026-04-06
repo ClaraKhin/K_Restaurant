@@ -45,11 +45,17 @@ const PaymentSuccess = () => {
   }, [sessionId, enqueueSnackbar, verifyPayment]);
 
   return (
-    <section className="bg-[#2a221e] min-h-screen flex flex-col items-center justify-center text-center px-6">
-      <div className="bg-[#1D1716] rounded-lg p-8 max-w-md w-full shadow-lg">
+    <section className="bg-[#2a221e] min-h-screen flex flex-col items-center justify-center text-center">
+      <div
+        className="bg-[#1D1716] rounded-lg max-w-md w-full shadow-lg"
+        style={{ padding: "2rem" }}
+      >
         {status === "loading" && (
           <>
-            <h1 className="text-white text-2xl font-bold mb-4">
+            <h1
+              className="text-white text-2xl font-bold"
+              style={{ marginBottom: "1rem" }}
+            >
               Confirming Payment...
             </h1>
             <p className="text-[#d7d7d7]">
@@ -60,14 +66,17 @@ const PaymentSuccess = () => {
 
         {status === "success" && (
           <>
-            <h1 className="text-white text-2xl font-bold mb-4">
+            <h1
+              className="text-white text-2xl font-bold"
+              style={{ marginBottom: "1rem" }}
+            >
               Payment Successful
             </h1>
-            <p className="text-[#d7d7d7] mb-6">
+            <p className="text-[#d7d7d7]" style={{ marginBottom: "1rem" }}>
               Thanks for your payment. The order and payment references are
               stored for reconciliation.
             </p>
-            <div className="bg-[#2a221e] rounded-md p-4 text-left text-sm text-[#d7d7d7] space-y-2 mb-6">
+            {/* <div className="bg-[#2a221e] rounded-md p-4 text-left text-sm text-[#d7d7d7] space-y-2 mb-6">
               <p>
                 <span className="text-[#F6B100] font-semibold">
                   Payment ID:
@@ -78,17 +87,41 @@ const PaymentSuccess = () => {
                 <span className="text-[#F6B100] font-semibold">Order ID:</span>{" "}
                 {details.orderId || "Not available"}
               </p>
-            </div>
+            </div> */}
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/orders")}
-                className="w-full bg-[#F6B100] text-[#1F1F1F] font-semibold py-3 rounded-md hover:opacity-90 transition-opacity"
+                className="w-full"
+                style={{
+                  backgroundColor: "#2A221E",
+                  color: "#FFFFFF",
+                  padding: "0.75rem",
+                  fontWeight: "600",
+                  borderRadius: "0.375rem",
+                  cursor: "pointer",
+                  transition: "opacity 0.2s ease-in-out",
+                  "&:hover": {
+                    opacity: "0.9",
+                  },
+                }}
               >
                 View Orders
               </button>
               <button
                 onClick={() => navigate("/menu")}
-                className="w-full bg-[#3d3d3d] text-[#FAF0DC] font-semibold py-3 rounded-md hover:opacity-90 transition-opacity"
+                className="w-full"
+                style={{
+                  backgroundColor: "#2A221E",
+                  color: "#FFFFFF",
+                  padding: "0.75rem",
+                  fontWeight: "600",
+                  borderRadius: "0.375rem",
+                  cursor: "pointer",
+                  transition: "opacity 0.2s ease-in-out",
+                  "&:hover": {
+                    opacity: "0.9",
+                  },
+                }}
               >
                 Back to Menu
               </button>
