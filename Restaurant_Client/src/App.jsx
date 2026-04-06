@@ -17,6 +17,7 @@ import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
 import Dashboard from "./pages/Dashboard";
 import PaymentCancel from "./pages/PaymentCancel";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function Layout() {
   const { isLoading } = useLoadData();
@@ -76,6 +77,14 @@ function Layout() {
           element={
             <ProtectedRoute>
               <PaymentCancel />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/success"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccess />
             </ProtectedRoute>
           }
         />

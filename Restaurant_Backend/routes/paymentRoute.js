@@ -5,5 +5,8 @@ const router = express.Router();
 
 
 router.route("/create-order").post(isVerifiedUser, createOrder);
-router.route("/verify-payment").post(isVerifiedUser, verifyPayment);
+router
+    .route("/verify-payment")
+    .get(isVerifiedUser, verifyPayment)
+    .post(isVerifiedUser, verifyPayment);
 module.exports = router;

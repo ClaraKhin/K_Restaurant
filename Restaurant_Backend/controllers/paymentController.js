@@ -6,9 +6,14 @@ const stripe = new Stripe(config.stripeSecretKey);
 
 const createOrder = async (req, res, next) => {
     try {
-        const { amount } = req.body;
+        const { amount, orderId } = req.body;
 
-        // Basic validation
+        if (!amount) {
+            return next(createHttpError(400, "Amount is required"));
+        }
+
+        const stripeOrderId = orderId ? String(orderId) : `temp-order-${Date.now()}`;
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
@@ -22,8 +27,10 @@ const createOrder = async (req, res, next) => {
                     },
                     quantity: 1,
                 },
-            ],// For one-time payment, use "payment" mode. For subscriptions, use "subscription"
+            ],
+            // For one-time payment, use "payment" mode. For subscriptions, use "subscription"
             mode: "payment",
+            metadata: { orderId: stripeOrderId }, // Attach your order id so it comes back on success
             success_url: `${config.clientURL}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${config.clientURL}/cancel`,
         });
@@ -32,6 +39,7 @@ const createOrder = async (req, res, next) => {
             success: true,
             sessionId: session.id,
             url: session.url,
+            orderId: stripeOrderId,
         });
     } catch (error) {
         next(error);
@@ -40,20 +48,31 @@ const createOrder = async (req, res, next) => {
 
 const verifyPayment = async (req, res, next) => {
     try {
-        const { session_id } = req.query;
+        const sessionId = req.query.session_id || req.body.session_id;
 
-        // Retrieve the session from Stripe to verify payment status
-        const session = await stripe.checkout.sessions.retrieve(session_id);
+        if (!sessionId) {
+            return next(createHttpError(400, "session_id is required"));
+        }
 
-        // Check if payment was successful and respond accordingly 
-        if (session.payment_status === "paid") {
-            return res.status(200).json({
-                success: true,
-                message: "Payment successful",
-            });
-        } else {
+        // Retrieve the session from Stripe to verify payment status and read metadata
+        const session = await stripe.checkout.sessions.retrieve(sessionId, {
+            expand: ["payment_intent"],
+        });
+
+        if (session.payment_status !== "paid") {
             return next(createHttpError(400, "Payment not completed"));
         }
+
+        const paymentId = typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id;
+
+        return res.status(200).json({
+            success: true,
+            message: "Payment successful",
+            paymentId: paymentId || null,
+            orderId: session.metadata?.orderId || null,
+        });
     } catch (error) {
         next(error);
     }

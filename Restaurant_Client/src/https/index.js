@@ -16,4 +16,5 @@ export const getTables = () => api.get("/api/table");
 
 //payment endpoints
 export const createOrderStripe = (data) => api.post("/api/payment/create-order", data);
-export const verifyPayment = (data) => api.post("/api/payment/verify-payment", data);
+export const verifyPayment = (sessionId) =>
+  api.get("/api/payment/verify-payment", { params: { session_id: sessionId } });
