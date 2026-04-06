@@ -16,8 +16,10 @@ connectDB();
 app.use(cors({
     credentials: true,
     origin: "http://localhost:5173"
-}))
+}));
+app.use("/api/payment/stripe-webhook", express.raw({ type: "application/json" })); // For Stripe webhook, use raw body parser
 app.use(express.json()); // Parse JSON request bodies
+
 app.use(cookieParser()); // Parse cookie headers and attach them to req.cookies
 
 
