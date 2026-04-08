@@ -17,8 +17,10 @@ app.use(cors({
     credentials: true,
     origin: "http://localhost:5173"
 }));
-app.use("/api/payment/stripe-webhook", express.raw({ type: "application/json" })); // For Stripe webhook, use raw body parser
-app.use(express.json()); // Parse JSON request bodies
+// Stripe CLI webhook forwarding (keeps raw body for signature verification)
+// Example (replace 8000 with your PORT): stripe listen --forward-to localhost:8000/api/payment/webhook
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
+app.use(express.json()); // Parse JSON request bodies (other routes)
 
 app.use(cookieParser()); // Parse cookie headers and attach them to req.cookies
 
