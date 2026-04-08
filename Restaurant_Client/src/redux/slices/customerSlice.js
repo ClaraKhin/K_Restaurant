@@ -5,6 +5,7 @@ const initialState = {
     customerName: "",
     customerPhone: "",
     guests: 0,
+    tableId: "",
     tableNo: ""
 };
 
@@ -24,9 +25,11 @@ const customerSlice = createSlice({
             state.customerName = "";
             state.customerPhone = "";
             state.guests = 0;
+            state.tableId = "";
             state.tableNo = "";
         },
         updateTable: (state, action) => {
+            state.tableId = action.payload.tableId;
             state.tableNo = action.payload.tableNo;
         }
     }

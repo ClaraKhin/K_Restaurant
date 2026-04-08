@@ -2,6 +2,9 @@ const Stripe = require("stripe");
 const createHttpError = require("http-errors");
 const config = require("../config/config");
 const Payment = require("../models/paymentModel");
+const Order = require("../models/orderModel");
+const Table = require("../models/tableModel");
+const mongoose = require("mongoose");
 
 const stripe = new Stripe(config.stripeSecretKey);
 
@@ -56,12 +59,73 @@ const upsertPayment = async ({
     }
 };
 
+const markTableBooked = async ({ tableId, orderId }) => {
+    if (!mongoose.Types.ObjectId.isValid(tableId)) {
+        console.warn("[Table Booking] Invalid tableId", { tableId });
+        return null;
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        console.warn("[Table Booking] Invalid orderId", { orderId });
+        return null;
+    }
+
+    const table = await Table.findByIdAndUpdate(
+        tableId,
+        { status: "Booked", currentOrder: orderId },
+        { new: true }
+    );
+
+    if (!table) {
+        console.error("[Table Booking] Table not found", { tableId });
+        return null;
+    }
+
+    console.log("[Table Booking] Table booked", { tableId, orderId });
+    return table;
+};
+
+const markOrderInProgress = async (orderId) => {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) return null;
+    return await Order.findByIdAndUpdate(orderId, { orderStatus: "In Progress" }, { new: true });
+};
+
 const createOrder = async (req, res, next) => {
     try {
-        const { amount, orderId } = req.body;
+        const { amount, orderId, order } = req.body;
         if (!amount) return next(createHttpError(400, "Amount is required"));
 
-        const stripeOrderId = orderId ? String(orderId) : `temp-order-${Date.now()}`;
+        let stripeOrderId = orderId ? String(orderId) : `temp-order-${Date.now()}`;
+        let stripeTableId = null;
+        let customerName = null;
+
+        if (order) {
+            const tableId = order.table;
+            if (!mongoose.Types.ObjectId.isValid(tableId)) {
+                return next(createHttpError(400, "Invalid table id"));
+            }
+
+            const newOrder = new Order({
+                customerDetails: order.customerDetails,
+                bills: order.bills,
+                items: order.items,
+                table: tableId,
+                paymentMethod: "Online",
+                orderStatus: "Pending Payment",
+            });
+
+            await newOrder.save();
+
+            stripeOrderId = String(newOrder._id);
+            stripeTableId = String(tableId);
+            customerName = newOrder.customerDetails?.name ? String(newOrder.customerDetails.name) : null;
+        }
+
+        const stripeMetadata = {
+            orderId: stripeOrderId,
+            ...(stripeTableId ? { tableId: stripeTableId } : {}),
+            ...(customerName ? { customerName } : {}),
+        };
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
@@ -76,7 +140,8 @@ const createOrder = async (req, res, next) => {
                 },
             ],
             mode: "payment",
-            metadata: { orderId: stripeOrderId },              // store orderId
+            metadata: stripeMetadata,
+            payment_intent_data: { metadata: stripeMetadata },
             success_url: `${config.clientURL}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${config.clientURL}/cancel`,
         });
@@ -172,6 +237,29 @@ const verifyPayment = async (req, res, next) => {
         } catch (err) {
             console.error("[Verify Payment] Payment upsert failed:", err.message);
             return next(createHttpError(500, "Payment confirmed but saving payment record failed"));
+        }
+
+        const tableId = session.metadata?.tableId || null;
+        if (tableId && mongoose.Types.ObjectId.isValid(tableId) && mongoose.Types.ObjectId.isValid(orderId)) {
+            try {
+                const table = await markTableBooked({ tableId, orderId });
+                if (!table) {
+                    return next(createHttpError(500, "Payment confirmed but table booking failed"));
+                }
+
+                const updatedOrder = await markOrderInProgress(orderId);
+                if (!updatedOrder) {
+                    console.warn("[Verify Payment] Could not update order status", { orderId });
+                }
+            } catch (err) {
+                console.error("[Verify Payment] Table booking failed:", err.message);
+                return next(createHttpError(500, "Payment confirmed but table booking failed"));
+            }
+        } else {
+            console.warn("[Verify Payment] Missing tableId/orderId metadata for booking", {
+                orderId,
+                tableId: tableId || "n/a",
+            });
         }
 
         res.status(200).json({
@@ -281,6 +369,24 @@ const webhookHandler = async (req, res) => {
         });
 
         console.log("[Stripe Webhook] upsert ok", { id: event.id, type: event.type, paymentId, orderId });
+
+        const tableId = session.metadata?.tableId || null;
+        if (tableId && mongoose.Types.ObjectId.isValid(tableId) && mongoose.Types.ObjectId.isValid(orderId)) {
+            const table = await markTableBooked({ tableId, orderId });
+            if (!table) {
+                throw new Error("Table booking failed");
+            }
+
+            const updatedOrder = await markOrderInProgress(orderId);
+            if (!updatedOrder) {
+                console.warn("[Stripe Webhook] Could not update order status", { orderId });
+            }
+        } else {
+            console.warn("[Stripe Webhook] Missing tableId/orderId metadata for booking", {
+                orderId,
+                tableId: tableId || "n/a",
+            });
+        }
 
         return res.status(200).json({ received: true });
     } catch (err) {

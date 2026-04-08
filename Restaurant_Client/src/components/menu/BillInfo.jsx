@@ -39,7 +39,7 @@ const BillInfo = () => {
           totalWithTax: totalPriceWithTax,
         },
         items: cartData,
-        table: customerData.table.tableId,
+        table: customerData.tableId,
         paymentMethod,
       };
       console.log("Order Data:", orderData);
@@ -50,7 +50,27 @@ const BillInfo = () => {
     if (paymentMethod === "Online") {
       setIsPlacingOrder(true);
       try {
-        const { data } = await createOrderStripe({ amount: totalPriceWithTax });
+        const orderData = {
+          customerDetails: {
+            name: customerData.customerName,
+            phone: customerData.customerPhone,
+            guests: customerData.guests,
+          },
+          orderStatus: "Pending Payment",
+          bills: {
+            total,
+            tax,
+            totalWithTax: totalPriceWithTax,
+          },
+          items: cartData,
+          table: customerData.tableId,
+          paymentMethod,
+        };
+
+        const { data } = await createOrderStripe({
+          amount: totalPriceWithTax,
+          order: orderData,
+        });
         console.log("Stripe Session Created:", data);
 
         if (!data?.url) {
