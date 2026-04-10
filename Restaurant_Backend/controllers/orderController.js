@@ -38,7 +38,9 @@ const getOrderById = async (req, res, next) => {
 
 const getOrders = async (req, res, next) => {
     try {
-        const orders = await Order.find();
+        const orders = await Order.find()
+            .sort({ orderDate: -1, createdAt: -1 })
+            .populate({ path: "table", select: "tableNo" });
         res.status(200).json({ data: orders });
     } catch (error) {
         next(error);

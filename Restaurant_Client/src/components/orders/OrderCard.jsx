@@ -1,7 +1,84 @@
 import React from "react";
 import { CheckOutlined } from "@ant-design/icons";
+import { formatDate, getAvatarName } from "../../utils";
 
-const OrderCard = () => {
+const parseDate = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const OrderCard = ({ order }) => {
+  const customerName = order?.customerDetails?.name || "";
+  const displayCustomerName = customerName || "Unknown";
+  const initials = getAvatarName(customerName) || "N/A";
+
+  const shortOrderId = order?._id ? order._id.slice(-6) : String(order?.id || "");
+  const orderRef = shortOrderId ? `#${shortOrderId}` : "#N/A";
+
+  const tableNo =
+    order?.table && typeof order.table === "object" ? order.table.tableNo : null;
+  const orderType = order?.table ? "Dine in" : "Take away";
+  const orderMeta = tableNo ? `${orderRef}/ ${orderType} · Table ${tableNo}` : `${orderRef}/ ${orderType}`;
+
+  const status = order?.orderStatus || "Unknown";
+
+  const statusMeta = (() => {
+    switch (status) {
+      case "Pending Payment":
+        return {
+          pillClassName: "text-[#F6B100] bg-[#664a04]",
+          dotClassName: "bg-[#F6B100]",
+          subtext: "Awaiting Payment",
+          showCheck: false,
+        };
+      case "In Progress":
+        return {
+          pillClassName: "text-[#F6B100] bg-[#664a04]",
+          dotClassName: "bg-[#F6B100]",
+          subtext: "In Progress",
+          showCheck: false,
+        };
+      case "Ready":
+        return {
+          pillClassName: "text-green-600 bg-[#2e4a40]",
+          dotClassName: "bg-green-600",
+          subtext: "Ready To Serve",
+          showCheck: true,
+        };
+      case "Completed":
+        return {
+          pillClassName: "text-blue-400 bg-[#1f2a3a]",
+          dotClassName: "bg-blue-400",
+          subtext: "Completed",
+          showCheck: true,
+        };
+      default:
+        return {
+          pillClassName: "text-[#ababab] bg-[#2A221E]",
+          dotClassName: "bg-[#ababab]",
+          subtext: "Status Unknown",
+          showCheck: false,
+        };
+    }
+  })();
+
+  const orderDate = parseDate(order?.orderDate);
+  const createdAt = parseDate(order?.createdAt);
+  const dateToShow =
+    orderDate && createdAt ? (orderDate > createdAt ? orderDate : createdAt) : orderDate || createdAt;
+
+  const formattedDateTime = dateToShow
+    ? `${formatDate(dateToShow)} ${dateToShow.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })}`
+    : "Unknown date";
+
+  const itemsCount = Array.isArray(order?.items) ? order.items.length : 0;
+  const total = order?.bills?.totalWithTax ?? order?.bills?.total ?? 0;
+  const totalNumber = typeof total === "number" ? total : Number(total);
   return (
     <div
       className="w-[450px] bg-[#1d1716] rounded-lg"
@@ -17,7 +94,7 @@ const OrderCard = () => {
             borderRadius: "0.5rem",
           }}
         >
-          AM
+          {initials}
         </button>
         <div className="flex items-center justify-between w-[100%]">
           <div className="flex flex-col items-start gap-1">
@@ -25,16 +102,16 @@ const OrderCard = () => {
               className="text-[#FFFFFF] tracking-wide"
               style={{ fontWeight: "600", fontSize: "1.125rem" }}
             >
-              Clara Khin
+              {displayCustomerName}
             </h1>
             <p className="text-[#ababab]" style={{ fontSize: "0.875rem" }}>
-              #101/ Dine in
+              {orderMeta}
             </p>
           </div>
 
           <div className="flex flex-col items-end gap-1">
             <p
-              className=" text-green-600 bg-[#2e4a40] rounded-lg "
+              className={`${statusMeta.pillClassName} rounded-lg`}
               style={{
                 paddingLeft: "0.5rem",
                 paddingRight: "0.5rem",
@@ -42,41 +119,45 @@ const OrderCard = () => {
                 paddingBottom: "0.25rem",
               }}
             >
-              <CheckOutlined
-                style={{
-                  display: "inline",
-                  marginRight: "-0.7rem",
-                  fontSize: "1.3rem",
-                }}
-              />
-              <CheckOutlined
-                style={{
-                  display: "inline",
-                  marginRight: "0.5rem",
-                  fontSize: "1.3rem",
-                }}
-              />
-              Ready
+              {statusMeta.showCheck && (
+                <>
+                  <CheckOutlined
+                    style={{
+                      display: "inline",
+                      marginRight: "-0.7rem",
+                      fontSize: "1.3rem",
+                    }}
+                  />
+                  <CheckOutlined
+                    style={{
+                      display: "inline",
+                      marginRight: "0.5rem",
+                      fontSize: "1.3rem",
+                    }}
+                  />
+                </>
+              )}
+              {status}
             </p>
             <p
               className="text-[#ababab] items-center flex"
               style={{ fontSize: "0.875rem" }}
             >
               <span
-                className="bg-green-600 text-green-600 w-[1rem] h-[1rem] rounded-full inline-block"
+                className={`w-[1rem] h-[1rem] rounded-full inline-block ${statusMeta.dotClassName}`}
                 style={{ marginRight: "0.5rem" }}
               ></span>
-              Ready To Serve
+              {statusMeta.subtext}
             </p>
           </div>
         </div>
       </div>
       <div
-        className="flex items-center justify-center text-[#ababab] "
+        className="flex items-center justify-between text-[#ababab]"
         style={{ marginTop: "1rem" }}
       >
-        <p>January 18, 2025 08:32 PM </p>
-        <p>8 Items</p>
+        <p>{formattedDateTime}</p>
+        <p>{itemsCount} Items</p>
       </div>
       <hr
         style={{
@@ -100,7 +181,7 @@ const OrderCard = () => {
           className="text-[#ffffff]"
           style={{ fontSize: "1.125rem", fontWeight: 600 }}
         >
-          $250.00
+          ${Number.isFinite(totalNumber) ? totalNumber.toFixed(2) : "0.00"}
         </p>
       </div>
     </div>

@@ -2,9 +2,42 @@ import { useState } from "react";
 import BottomNav from "../components/shared/BottomNav";
 import OrderCard from "../components/orders/OrderCard";
 import BackButton from "../components/shared/BackButton";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getOrders } from "../https";
+import { enqueueSnackbar } from "notistack";
 
 const Orders = () => {
   const [status, setStatus] = useState("all");
+
+  const { data: resData, isError, isPending } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      return await getOrders();
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  if (isError) {
+    enqueueSnackbar("Something went wrong!", { variant: "error" });
+  }
+
+  const orders = resData?.data?.data ?? [];
+
+  const filteredOrders = orders.filter((order) => {
+    if (status === "all") return true;
+
+    if (status === "progress") {
+      return (
+        order.orderStatus === "In Progress" ||
+        order.orderStatus === "Pending Payment"
+      );
+    }
+
+    if (status === "ready") return order.orderStatus === "Ready";
+    if (status === "completed") return order.orderStatus === "Completed";
+
+    return true;
+  });
   return (
     <section
       className="bg-[#2a221e] min-h-screen overflow-y-auto"
@@ -112,20 +145,17 @@ const Orders = () => {
           scrollbarWidth: "none",
         }}
       >
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard />
+        {isPending ? (
+          <p className="text-[#ababab]" style={{ fontSize: "1rem" }}>
+            Loading orders...
+          </p>
+        ) : filteredOrders.length === 0 ? (
+          <p className="text-[#ababab]" style={{ fontSize: "1rem" }}>
+            No orders found.
+          </p>
+        ) : (
+          filteredOrders.map((order) => <OrderCard key={order._id} order={order} />)
+        )}
       </div>
 
       <BottomNav />
