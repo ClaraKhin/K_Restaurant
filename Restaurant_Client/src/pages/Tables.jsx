@@ -10,10 +10,6 @@ import { enqueueSnackbar } from "notistack";
 const Tables = () => {
   const [status, setStatus] = useState("all");
 
-  // useEffect(() => {
-  //   document.title = "POS | Tables";
-  // }, []);
-
   const { data: resData, isError } = useQuery({
     queryKey: ["tables"],
     queryFn: async () => {
@@ -27,6 +23,14 @@ const Tables = () => {
   }
 
   console.log(resData);
+
+  const tablesData = resData?.data?.data ?? [];
+  const filteredTables =
+    status === "booked"
+      ? tablesData.filter(
+          (table) => String(table.status).toLowerCase() === "booked"
+        )
+      : tablesData;
 
   return (
     <section className="bg-[#2A221E] h-[calc(100vh-5rem)] overflow-hidden">
@@ -97,7 +101,7 @@ const Tables = () => {
           scrollbarWidth: "none",
         }}
       >
-        {resData?.data.data.map((table) => {
+        {filteredTables.map((table) => {
           return (
             <TableCard
               key={table._id}
