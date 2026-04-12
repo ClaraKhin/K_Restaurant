@@ -16,6 +16,7 @@ export const getTables = () => api.get("/api/table");
 
 // order endpoints
 export const getOrders = () => api.get("/api/order");
+export const updateOrder = (id, data) => api.put(`/api/order/${id}`, data);
 
 //payment endpoints
 export const createOrderStripe = (data) => api.post("/api/payment/create-order", data);

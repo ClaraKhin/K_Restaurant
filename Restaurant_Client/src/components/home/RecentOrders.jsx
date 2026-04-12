@@ -184,15 +184,15 @@ const RecentOrders = () => {
                     </h1>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <p className="text-gray-400">
+                    <p className="text-yellow-400">
                       {order?.orderStatus || "Pending"}
                     </p>
                     <p
-                      className="text-[#ababab] items-center flex"
+                      className="text-[#f6b100] items-center flex"
                       style={{ fontSize: "0.875rem" }}
                     >
                       <span
-                        className="bg-gray-400 text-gray-400 w-[1rem] h-[1rem] rounded-full inline-block"
+                        className="bg-yellow-400  w-[1rem] h-[1rem] rounded-full inline-block"
                         style={{ marginRight: "0.5rem" }}
                       ></span>
                       {order?.orderStatus === "Ready"
