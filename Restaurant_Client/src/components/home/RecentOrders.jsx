@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getOrders } from "../../https";
+import { CheckOutlined } from "@ant-design/icons";
 import OrderList from "./OrderList";
 
 const RecentOrders = () => {
@@ -168,12 +169,14 @@ const RecentOrders = () => {
                         ((order.items?.length || 0) === 1 ? "" : "s")}
                     </p>
                   </div>
+
                   <div>
                     <h1
                       className="text-[#f6b100]"
                       style={{
                         fontWeight: "600",
                         border: "1px solid #f6b100",
+                        textAlign: "center",
                         borderRadius: "0.5rem",
                         padding: "0.5rem 1rem",
                       }}
@@ -183,24 +186,65 @@ const RecentOrders = () => {
                         : "Take away"}
                     </h1>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <p className="text-yellow-400">
-                      {order?.orderStatus || "Pending"}
-                    </p>
-                    <p
-                      className="text-[#f6b100] items-center flex"
-                      style={{ fontSize: "0.875rem" }}
-                    >
-                      <span
-                        className="bg-yellow-400  w-[1rem] h-[1rem] rounded-full inline-block"
-                        style={{ marginRight: "0.5rem" }}
-                      ></span>
-                      {order?.orderStatus === "Ready"
-                        ? "Ready To Serve"
-                        : order?.orderStatus === "In Progress"
-                        ? "Preparing"
-                        : "Pending"}
-                    </p>
+                  <div className="flex flex-col items-end gap-1 w-[18%]">
+                    {order?.orderStatus === "Ready" ? (
+                      <>
+                        <p
+                          className="text-green-600 rounded-lg flex items-center"
+                          style={{
+                            paddingLeft: "0.5rem",
+                            paddingRight: "0.5rem",
+                            paddingTop: "0.25rem",
+                            paddingBottom: "0.25rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          <CheckOutlined
+                            style={{
+                              display: "inline",
+                              marginRight: "-0.7rem",
+                              fontSize: "1.3rem",
+                            }}
+                          />
+                          <CheckOutlined
+                            style={{
+                              display: "inline",
+                              marginRight: "0.5rem",
+                              fontSize: "1.3rem",
+                            }}
+                          />
+                          Ready
+                        </p>
+                        <p
+                          className="text-[#ababab] items-center flex"
+                          style={{ fontSize: "0.875rem" }}
+                        >
+                          <span
+                            className="bg-green-600 w-[1rem] h-[1rem] rounded-full inline-block"
+                            style={{ marginRight: "0.5rem" }}
+                          ></span>
+                          Ready To Serve
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-[#f6b100]">
+                          {order?.orderStatus || "Pending"}
+                        </p>
+                        <p
+                          className="text-[#ababab] items-center flex"
+                          style={{ fontSize: "0.875rem" }}
+                        >
+                          <span
+                            className="bg-yellow-400 w-[1rem] h-[1rem] rounded-full inline-block"
+                            style={{ marginRight: "0.5rem" }}
+                          ></span>
+                          {order?.orderStatus === "In Progress"
+                            ? "Preparing"
+                            : "Pending"}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
