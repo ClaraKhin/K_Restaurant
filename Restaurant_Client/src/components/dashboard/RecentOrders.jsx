@@ -193,7 +193,7 @@ const RecentOrders = () => {
   }, [apiOrders]);
 
   const gridCols =
-    "minmax(100px,0.9fr) minmax(160px,1.4fr) minmax(140px,1.1fr) minmax(190px,1.6fr) minmax(120px,1fr) minmax(120px,1fr) minmax(110px,0.9fr) minmax(80px,0.5fr)";
+    "minmax(100px,0.9fr) minmax(150px,1fr) minmax(140px,1fr) minmax(190px,1.6fr) minmax(120px,1fr) minmax(120px,1fr) minmax(110px,0.9fr) minmax(80px,0.5fr)";
 
   return (
     <div
@@ -365,50 +365,9 @@ const RecentOrders = () => {
                   <div style={{ padding: "1rem" }}>{order.dateTimeText}</div>
 
                   <div style={{ padding: "1rem" }}>
-                    <div className="flex flex-col gap-2">
-                      <div
-                        className="text-[#f5f5f5]"
-                        style={{ fontWeight: 600 }}
-                      >
-                        {(Array.isArray(order.items) ? order.items.length : 0) +
-                          " Items"}
-                      </div>
-                      {Array.isArray(order.items) && order.items.length > 0 ? (
-                        <ul
-                          className="text-[#ababab]"
-                          style={{
-                            fontSize: "0.875rem",
-                            lineHeight: "1.25rem",
-                            listStyleType: "disc",
-                            paddingLeft: "1.25rem",
-                          }}
-                        >
-                          {order.items.map((item, itemIndex) => {
-                            const itemName =
-                              typeof item?.name === "string" && item.name.trim()
-                                ? item.name
-                                : "Item";
-                            const qty = getItemQuantity(item);
-                            const lineTotal = getItemLineTotal(item);
-                            return (
-                              <li
-                                key={
-                                  item?.id ?? `${order.key}-item-${itemIndex}`
-                                }
-                              >
-                                {itemName} × {qty} — ${toMoney(lineTotal)}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      ) : (
-                        <div
-                          className="text-[#ababab]"
-                          style={{ fontSize: "0.875rem" }}
-                        >
-                          No items
-                        </div>
-                      )}
+                    <div className="text-[#f5f5f5]" style={{ fontWeight: 600 }}>
+                      {(Array.isArray(order.items) ? order.items.length : 0) +
+                        " Items"}
                     </div>
                   </div>
 
