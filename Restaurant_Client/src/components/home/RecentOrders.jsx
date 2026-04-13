@@ -188,53 +188,75 @@ const RecentOrders = () => {
                   </div>
                   <div className="flex flex-col items-end gap-1 w-[18%]">
                     {order?.orderStatus === "Ready" ? (
-                      <>
-                        <p
-                          className="text-green-600 bg-[#2e4a40] rounded-lg flex items-center"
+                      <div
+                        className="bg-[#2e4a40] rounded-lg flex items-center"
+                        style={{ padding: "0.25rem 0.5rem" }}
+                      >
+                        <CheckOutlined
                           style={{
-                            paddingLeft: "0.5rem",
-                            paddingRight: "0.5rem",
-                            paddingTop: "0.25rem",
-                            paddingBottom: "0.25rem",
-                            fontWeight: 600,
+                            display: "inline",
+                            marginRight: "-0.7rem",
+                            color: "#00A63E",
+                            fontSize: "1.3rem",
                           }}
+                        />
+                        <CheckOutlined
+                          style={{
+                            display: "inline",
+                            color: "#00A63E",
+                            fontSize: "1.3rem",
+                          }}
+                        />
+                        <p
+                          className="text-green-600"
+                          style={{ padding: "0.25rem 0.5rem", fontWeight: 600 }}
                         >
-                          <CheckOutlined
-                            style={{
-                              display: "inline",
-                              marginRight: "-0.7rem",
-                              fontSize: "1.3rem",
-                            }}
-                          />
-                          <CheckOutlined
-                            style={{
-                              display: "inline",
-                              marginRight: "0.5rem",
-                              fontSize: "1.3rem",
-                            }}
-                          />
                           Ready
                         </p>
-                      </>
-                    ) : (
-                      <>
-                        <p
-                          className="text-[#f6b100] bg-[#664a04] rounded-lg  flex items-center"
+                      </div>
+                    ) : order?.orderStatus === "Completed" ? (
+                      <div
+                        className="bg-[#1f2a3a] rounded-lg flex items-center"
+                        style={{ padding: "0.25rem 0.5rem" }}
+                      >
+                        <CheckOutlined
                           style={{
-                            paddingLeft: "0.5rem",
-                            paddingRight: "0.5rem",
-                            paddingTop: "0.25rem",
-                            paddingBottom: "0.25rem",
-                            fontWeight: 600,
+                            display: "inline",
+                            marginRight: "-0.7rem",
+                            color: "#4DA2FF",
+                            fontSize: "1.3rem",
                           }}
+                        />
+                        <CheckOutlined
+                          style={{
+                            display: "inline",
+                            color: "#4DA2FF",
+                            fontSize: "1.3rem",
+                          }}
+                        />
+                        <p
+                          className="text-blue-400"
+                          style={{ padding: "0.25rem 0.5rem", fontWeight: 600 }}
                         >
-                          <span
-                            className="bg-yellow-400 w-[1rem] h-[1rem] rounded-full inline-block"
-                            style={{ marginRight: "0.5rem" }}
-                          ></span>
+                          Completed
+                        </p>
+                      </div>
+                    ) : (
+                      <div
+                        className=" bg-[#664a04] rounded-lg flex items-center"
+                        style={{ padding: "0.25rem 0.5rem" }}
+                      >
+                        <span
+                          className="bg-yellow-400 w-[1rem] h-[1rem] rounded-full inline-block"
+                          style={{ marginRight: "0.5rem" }}
+                        ></span>
+                        <p
+                          className="text-[#f6b100]"
+                          style={{ fontWeight: 600 }}
+                        >
                           {order?.orderStatus || "Pending"}
                         </p>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
