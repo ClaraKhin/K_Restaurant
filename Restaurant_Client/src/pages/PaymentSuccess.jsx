@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { verifyPayment } from "../https";
+import ReceiptModal from "../components/payment/ReceiptModal";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [status, setStatus] = useState("loading"); // loading | success | error
-  const [details, setDetails] = useState({ paymentId: null, orderId: null });
+  const [details, setDetails] = useState({
+    paymentId: null,
+    orderId: null,
+    receipt: null,
+  });
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +31,7 @@ const PaymentSuccess = () => {
         const payload = {
           paymentId: data.paymentId,
           orderId: data.orderId,
+          receipt: data.receipt ?? null,
         };
 
         setDetails(payload);
@@ -32,6 +39,7 @@ const PaymentSuccess = () => {
         console.log("OrderId (metadata.orderId):", payload.orderId);
         enqueueSnackbar("Payment confirmed!", { variant: "success" });
         setStatus("success");
+        setIsReceiptOpen(Boolean(payload.receipt));
       } catch (err) {
         const message =
           err?.response?.data?.message ||
@@ -43,6 +51,10 @@ const PaymentSuccess = () => {
 
     fetchSession();
   }, [sessionId, enqueueSnackbar, verifyPayment]);
+
+  const handlePrintReceipt = () => {
+    window.print();
+  };
 
   return (
     <section className="bg-[#2a221e] min-h-screen flex flex-col items-center justify-center text-center">
@@ -147,6 +159,13 @@ const PaymentSuccess = () => {
           </>
         )}
       </div>
+
+      <ReceiptModal
+        isOpen={isReceiptOpen}
+        onClose={() => setIsReceiptOpen(false)}
+        onPrint={handlePrintReceipt}
+        receipt={details.receipt}
+      />
     </section>
   );
 };

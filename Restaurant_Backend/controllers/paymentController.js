@@ -8,6 +8,77 @@ const mongoose = require("mongoose");
 
 const stripe = new Stripe(config.stripeSecretKey);
 
+const normalizeMoney = (value) => {
+    const amount = Number(value);
+    return Number.isFinite(amount) ? amount : 0;
+};
+
+const buildReceiptPayload = (order, { paymentId, paymentMethod } = {}) => {
+    if (!order) return null;
+
+    const rawOrderId = order?._id ? String(order._id) : order?.orderId ? String(order.orderId) : "";
+    const items = Array.isArray(order?.items)
+        ? order.items.map((item) => ({
+            name: item?.name || "Unknown item",
+            quantity: Number(item?.quantity) || 0,
+            pricePerQuantity: normalizeMoney(item?.pricePerQuantity),
+            price: normalizeMoney(item?.price),
+        }))
+        : [];
+
+    return {
+        orderId: rawOrderId,
+        paymentMethod: paymentMethod || order?.paymentMethod || "unknown",
+        stripePaymentIntentId: paymentId || order?.paymentData?.stripePaymentIntentId || "",
+        customerDetails: {
+            name: order?.customerDetails?.name || "",
+            phone: order?.customerDetails?.phone || "",
+            guests: Number(order?.customerDetails?.guests) || 0,
+        },
+        items,
+        bills: {
+            total: normalizeMoney(order?.bills?.total),
+            tax: normalizeMoney(order?.bills?.tax),
+            totalWithTax: normalizeMoney(order?.bills?.totalWithTax),
+        },
+        table:
+            order?.table && typeof order.table === "object" && order.table.tableNo
+                ? { tableNo: order.table.tableNo }
+                : null,
+    };
+};
+
+const persistOrderPaymentData = async ({
+    orderId,
+    paymentId,
+    paymentStatus,
+    paymentAmount,
+    paymentCurrency,
+}) => {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) return null;
+
+    return await Order.findByIdAndUpdate(
+        orderId,
+        {
+            $set: {
+                paymentData: {
+                    stripePaymentIntentId: paymentId || "",
+                    stripePaymentStatus: paymentStatus || "",
+                    stripePaymentAmount: normalizeMoney(paymentAmount),
+                    stripePaymentCurrency: paymentCurrency || "",
+                },
+            },
+        },
+        { new: true }
+    );
+};
+
+const getReceiptOrderById = async (orderId) => {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) return null;
+
+    return await Order.findById(orderId).populate({ path: "table", select: "tableNo" });
+};
+
 const upsertPayment = async ({
     paymentId,
     orderId = "unknown",
@@ -101,7 +172,7 @@ const createOrder = async (req, res, next) => {
 
         if (order) {
             const tableId = order.table;
-            if (!mongoose.Types.ObjectId.isValid(tableId)) {
+            if (tableId && !mongoose.Types.ObjectId.isValid(tableId)) {
                 return next(createHttpError(400, "Invalid table id"));
             }
 
@@ -109,7 +180,7 @@ const createOrder = async (req, res, next) => {
                 customerDetails: order.customerDetails,
                 bills: order.bills,
                 items: order.items,
-                table: tableId,
+                table: tableId || undefined,
                 paymentMethod: "Online",
                 orderStatus: "Pending Payment",
             });
@@ -117,7 +188,7 @@ const createOrder = async (req, res, next) => {
             await newOrder.save();
 
             stripeOrderId = String(newOrder._id);
-            stripeTableId = String(tableId);
+            stripeTableId = tableId ? String(tableId) : null;
             customerName = newOrder.customerDetails?.name ? String(newOrder.customerDetails.name) : null;
         }
 
@@ -239,6 +310,24 @@ const verifyPayment = async (req, res, next) => {
             return next(createHttpError(500, "Payment confirmed but saving payment record failed"));
         }
 
+        const paymentAmount = amountCents / 100;
+        const paymentStatus =
+            typeof session.payment_status === "string"
+                ? session.payment_status
+                : paymentIntent?.status || "paid";
+
+        const paymentDataOrder = await persistOrderPaymentData({
+            orderId,
+            paymentId,
+            paymentStatus,
+            paymentAmount,
+            paymentCurrency: currency,
+        });
+
+        if (mongoose.Types.ObjectId.isValid(orderId) && !paymentDataOrder) {
+            console.warn("[Verify Payment] Could not persist order payment data", { orderId });
+        }
+
         const tableId = session.metadata?.tableId || null;
         if (tableId && mongoose.Types.ObjectId.isValid(tableId) && mongoose.Types.ObjectId.isValid(orderId)) {
             try {
@@ -262,11 +351,18 @@ const verifyPayment = async (req, res, next) => {
             });
         }
 
+        const receiptOrder = await getReceiptOrderById(orderId);
+        const receipt = buildReceiptPayload(receiptOrder, {
+            paymentId,
+            paymentMethod: method,
+        });
+
         res.status(200).json({
             success: true,
             message: "Payment successful",
             paymentId: paymentId || null,
             orderId: session.metadata?.orderId || null,
+            receipt,
         });
     } catch (err) {
         next(err);
@@ -369,6 +465,19 @@ const webhookHandler = async (req, res) => {
         });
 
         console.log("[Stripe Webhook] upsert ok", { id: event.id, type: event.type, paymentId, orderId });
+
+        const paymentStatus = typeof session.payment_status === "string" ? session.payment_status : "paid";
+        const paymentDataOrder = await persistOrderPaymentData({
+            orderId,
+            paymentId,
+            paymentStatus,
+            paymentAmount: amount,
+            paymentCurrency: currency,
+        });
+
+        if (mongoose.Types.ObjectId.isValid(orderId) && !paymentDataOrder) {
+            console.warn("[Stripe Webhook] Could not persist order payment data", { orderId });
+        }
 
         const tableId = session.metadata?.tableId || null;
         if (tableId && mongoose.Types.ObjectId.isValid(tableId) && mongoose.Types.ObjectId.isValid(orderId)) {
