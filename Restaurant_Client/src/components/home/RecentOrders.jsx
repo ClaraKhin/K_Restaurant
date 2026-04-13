@@ -190,7 +190,7 @@ const RecentOrders = () => {
                     {order?.orderStatus === "Ready" ? (
                       <>
                         <p
-                          className="text-green-600 rounded-lg flex items-center"
+                          className="text-green-600 bg-[#2e4a40] rounded-lg flex items-center"
                           style={{
                             paddingLeft: "0.5rem",
                             paddingRight: "0.5rem",
@@ -215,33 +215,24 @@ const RecentOrders = () => {
                           />
                           Ready
                         </p>
-                        <p
-                          className="text-[#ababab] items-center flex"
-                          style={{ fontSize: "0.875rem" }}
-                        >
-                          <span
-                            className="bg-green-600 w-[1rem] h-[1rem] rounded-full inline-block"
-                            style={{ marginRight: "0.5rem" }}
-                          ></span>
-                          Ready To Serve
-                        </p>
                       </>
                     ) : (
                       <>
-                        <p className="text-[#f6b100]">
-                          {order?.orderStatus || "Pending"}
-                        </p>
                         <p
-                          className="text-[#ababab] items-center flex"
-                          style={{ fontSize: "0.875rem" }}
+                          className="text-[#f6b100] bg-[#664a04] rounded-lg  flex items-center"
+                          style={{
+                            paddingLeft: "0.5rem",
+                            paddingRight: "0.5rem",
+                            paddingTop: "0.25rem",
+                            paddingBottom: "0.25rem",
+                            fontWeight: 600,
+                          }}
                         >
                           <span
                             className="bg-yellow-400 w-[1rem] h-[1rem] rounded-full inline-block"
                             style={{ marginRight: "0.5rem" }}
                           ></span>
-                          {order?.orderStatus === "In Progress"
-                            ? "Preparing"
-                            : "Pending"}
+                          {order?.orderStatus || "Pending"}
                         </p>
                       </>
                     )}

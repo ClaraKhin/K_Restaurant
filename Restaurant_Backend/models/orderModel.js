@@ -23,8 +23,10 @@ const orderSchema = new mongoose.Schema({
     table: { type: mongoose.Schema.Types.ObjectId, ref: "Table" },
     paymentMethod: String,
     paymentData: {
-        razorpay_order_id: String,
-        razorpay_payment_id: String
+        stripePaymentIntentId: String,
+        stripePaymentStatus: String,
+        stripePaymentAmount: Number,
+        stripePaymentCurrency: String,
     }
 }, { timestamps: true });
 
