@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getTotalPrice } from "../../redux/slices/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart, getTotalPrice } from "../../redux/slices/cartSlice";
+import { removeCustomer } from "../../redux/slices/customerSlice";
 import { enqueueSnackbar } from "notistack";
-import { createOrderStripe } from "../../https/index";
+import { addOrder, createOrderStripe } from "../../https/index";
 
 const BillInfo = () => {
   const [paymentMethod, setPaymentMethod] = useState();
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartData = useSelector((state) => state.cart);
   const customerData = useSelector((state) => state.customer);
   const total = useSelector(getTotalPrice);
@@ -17,6 +21,11 @@ const BillInfo = () => {
   const handlePlaceOrder = async () => {
     if (isPlacingOrder) return;
 
+    if (!Array.isArray(cartData) || cartData.length === 0) {
+      enqueueSnackbar("Your cart is empty!", { variant: "warning" });
+      return;
+    }
+
     if (!paymentMethod) {
       enqueueSnackbar("Please select a payment method!", {
         variant: "warning",
@@ -26,23 +35,40 @@ const BillInfo = () => {
 
     // Cash Payment
     if (paymentMethod === "Cash") {
-      const orderData = {
-        customerDetails: {
-          name: customerData.customerName,
-          phone: customerData.customerPhone,
-          guests: customerData.guests,
-        },
-        orderStatus: "In Progress",
-        bills: {
-          total,
-          tax,
-          totalWithTax: totalPriceWithTax,
-        },
-        items: cartData,
-        table: customerData.tableId,
-        paymentMethod,
-      };
-      console.log("Order Data:", orderData);
+      setIsPlacingOrder(true);
+      try {
+        const orderData = {
+          customerDetails: {
+            name: customerData.customerName,
+            phone: customerData.customerPhone,
+            guests: customerData.guests,
+          },
+          orderStatus: "In Progress",
+          bills: {
+            total,
+            tax,
+            totalWithTax: totalPriceWithTax,
+          },
+          items: cartData,
+          table: customerData.tableId || undefined,
+          paymentMethod,
+        };
+
+        const { data } = await addOrder(orderData);
+        const message = data?.message || "Order placed successfully";
+        enqueueSnackbar(message, { variant: "success" });
+
+        dispatch(clearCart());
+        dispatch(removeCustomer());
+        setPaymentMethod(undefined);
+        navigate("/orders");
+      } catch (err) {
+        console.error(err);
+        const message = err?.response?.data?.message || "Failed to place order";
+        enqueueSnackbar(message, { variant: "error" });
+      } finally {
+        setIsPlacingOrder(false);
+      }
       return;
     }
 
