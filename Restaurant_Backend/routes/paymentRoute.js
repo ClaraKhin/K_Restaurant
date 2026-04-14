@@ -1,5 +1,10 @@
 const express = require("express");
-const { createOrder, verifyPayment, webhookHandler } = require("../controllers/paymentController");
+const {
+    createOrder,
+    verifyPayment,
+    getReceiptByOrderId,
+    webhookHandler,
+} = require("../controllers/paymentController");
 const { isVerifiedUser } = require("../middlewares/tokenVerification")
 const router = express.Router();
 
@@ -13,4 +18,8 @@ router
     .route("/verify-payment")
     .get(isVerifiedUser, verifyPayment)
     .post(isVerifiedUser, verifyPayment);
+router
+    .route("/receipt")
+    .get(isVerifiedUser, getReceiptByOrderId)
+    .post(isVerifiedUser, getReceiptByOrderId);
 module.exports = router;

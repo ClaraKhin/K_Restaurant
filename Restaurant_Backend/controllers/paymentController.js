@@ -369,6 +369,34 @@ const verifyPayment = async (req, res, next) => {
     }
 };
 
+const getReceiptByOrderId = async (req, res, next) => {
+    try {
+        const orderId = req.query.order_id || req.body?.order_id;
+        if (!orderId) return next(createHttpError(400, "order_id is required"));
+        if (!mongoose.Types.ObjectId.isValid(orderId)) {
+            return next(createHttpError(400, "Invalid order id"));
+        }
+
+        const receiptOrder = await getReceiptOrderById(orderId);
+        if (!receiptOrder) {
+            return next(createHttpError(404, "Order not found"));
+        }
+
+        const receipt = buildReceiptPayload(receiptOrder, {
+            paymentMethod: receiptOrder?.paymentMethod || "Cash",
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Receipt fetched successfully",
+            orderId: String(receiptOrder._id),
+            receipt,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 const webhookHandler = async (req, res) => {
     const sig = req.headers["stripe-signature"];
     const webhookSecret = config.stripeWebhookSecret;
@@ -504,4 +532,4 @@ const webhookHandler = async (req, res) => {
     }
 };
 
-module.exports = { createOrder, verifyPayment, webhookHandler };
+module.exports = { createOrder, verifyPayment, getReceiptByOrderId, webhookHandler };

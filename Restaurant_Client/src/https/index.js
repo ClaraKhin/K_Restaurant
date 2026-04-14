@@ -23,3 +23,5 @@ export const updateOrder = (id, data) => api.put(`/api/order/${id}`, data);
 export const createOrderStripe = (data) => api.post("/api/payment/create-order", data);
 export const verifyPayment = (sessionId) =>
   api.get("/api/payment/verify-payment", { params: { session_id: sessionId } });
+export const getReceiptByOrderId = (orderId) =>
+  api.get("/api/payment/receipt", { params: { order_id: orderId } });

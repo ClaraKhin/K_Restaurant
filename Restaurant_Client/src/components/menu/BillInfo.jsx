@@ -55,13 +55,22 @@ const BillInfo = () => {
         };
 
         const { data } = await addOrder(orderData);
+        const createdOrderId = data?.data?._id;
+        if (!createdOrderId) {
+          throw new Error("Order created but order id was not returned");
+        }
+
         const message = data?.message || "Order placed successfully";
         enqueueSnackbar(message, { variant: "success" });
 
         dispatch(clearCart());
         dispatch(removeCustomer());
         setPaymentMethod(undefined);
-        navigate("/orders");
+        navigate(
+          `/success?order_id=${encodeURIComponent(
+            createdOrderId
+          )}&payment_method=Cash`
+        );
       } catch (err) {
         console.error(err);
         const message = err?.response?.data?.message || "Failed to place order";
