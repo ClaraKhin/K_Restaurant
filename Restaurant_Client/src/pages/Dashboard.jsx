@@ -8,6 +8,7 @@ import Metrics from "../components/dashboard/Metrics";
 import RecentOrders from "../components/dashboard/RecentOrders";
 import Modal from "../components/dashboard/Modal";
 import Categories from "../components/dashboard/Categories";
+import Payments from "../components/dashboard/Payments";
 
 const buttons = [
   {
@@ -116,6 +117,7 @@ const Dashboard = () => {
       </div>
       {activeTab === "Metrics" && <Metrics />}
       {activeTab === "Orders" && <RecentOrders />}
+      {activeTab === "Payments" && <Payments />}
       {isTableModalOpen && <Modal setTableModalOpen={setTableModalOpen} />}
       {isCategoryModalOpen && (
         <Categories setCategoryModalOpen={setCategoryModalOpen} />
