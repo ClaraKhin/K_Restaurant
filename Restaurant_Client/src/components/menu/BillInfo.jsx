@@ -237,14 +237,13 @@ const BillInfo = () => {
       </div>
 
       <div
-        className="flex items-center gap-3"
         style={{
           paddingLeft: "1.25rem",
           paddingRight: "1.25rem",
           marginTop: "1rem",
         }}
       >
-        <button
+        {/* <button
           style={{
             backgroundColor: "#025cca",
             color: "#FAF0DC",
@@ -259,7 +258,7 @@ const BillInfo = () => {
           }}
         >
           Print Receipt
-        </button>
+        </button> */}
         <button
           onClick={handlePlaceOrder}
           disabled={isPlacingOrder}

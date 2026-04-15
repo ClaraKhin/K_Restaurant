@@ -230,7 +230,7 @@ const RecentOrders = () => {
             <div style={{ padding: "0.75rem" }}>Table No</div>
             <div style={{ padding: "0.75rem" }}>Total</div>
             <div className="text-center" style={{ padding: "0.75rem" }}>
-              Action
+              Payment
             </div>
           </div>
 
@@ -385,20 +385,11 @@ const RecentOrders = () => {
                     ${toMoney(order.total)}
                   </div>
 
-                  <div className="text-center" style={{ padding: "1rem" }}>
-                    <button
-                      onMouseEnter={() => setHoverOrderKey(order.key)}
-                      onMouseLeave={() => setHoverOrderKey(null)}
-                      className="text-blue-400 hover:text-blue-500 transition"
-                      style={{
-                        color:
-                          hoverOrderKey === order.key ? "#2679fd" : "#9dc9ff",
-                        transition: "color 0.2s",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <RetweetOutlined style={{ fontSize: "1.5rem" }} />
-                    </button>
+                  <div
+                    className="text-[#f5f5f5]"
+                    style={{ fontWeight: 600, padding: "1rem" }}
+                  >
+                    {order.paymentMethod}
                   </div>
                 </div>
               );
