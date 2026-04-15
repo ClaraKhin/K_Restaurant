@@ -25,3 +25,7 @@ export const verifyPayment = (sessionId) =>
   api.get("/api/payment/verify-payment", { params: { session_id: sessionId } });
 export const getReceiptByOrderId = (orderId) =>
   api.get("/api/payment/receipt", { params: { order_id: orderId } });
+
+// category endpoints
+export const addCategory = (data) => api.post("/api/category", data);
+export const getCategories = () => api.get("/api/category");
