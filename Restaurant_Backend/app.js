@@ -13,11 +13,10 @@ const PORT = config.port;
 connectDB();
 
 //middlewares
-const allowedOrigins = config.clientURL;
 
 app.use(cors({
     credentials: true,
-    origin: allowedOrigins
+    origin: ['http://localhost:5173', 'https://goldendynasty.vercel.app'],
 }));
 // Stripe CLI webhook forwarding (keeps raw body for signature verification)
 // Example (replace 8000 with your PORT): stripe listen --forward-to localhost:8000/api/payment/webhook
