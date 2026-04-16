@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 // axios instance with credentials and JSON content type to be sent to the backend
-const api = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL, withCredentials: true, headers: { 'Content-Type': 'application/json', Accept: 'application/json' } });
+const api = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8000", withCredentials: true, headers: { 'Content-Type': 'application/json', Accept: 'application/json' } });
 
 
 // API endpoints
