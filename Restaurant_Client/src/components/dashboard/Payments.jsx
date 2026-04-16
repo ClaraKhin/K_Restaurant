@@ -220,8 +220,8 @@ const Payments = () => {
                       onClick={() => handleViewReceipt(p.orderId)}
                       disabled={loadingReceipt}
                       style={{
-                        backgroundColor: "#025cca",
-                        color: "#FAF0DC",
+                        backgroundColor: "#2e4a40",
+                        color: "#02ca3a",
                         padding: "0.5rem 0.75rem",
                         borderRadius: "0.5rem",
                         fontWeight: 600,
