@@ -5,7 +5,7 @@ import MalaXiangGuo from "../assets/images/MalaXiangGuo.jpeg";
 import SiuMai from "../assets/images/Siu_Mai.jpeg";
 import ChowMein from "../assets/images/Chow_Mein.png";
 import SweetSourPork from "../assets/images/Sweet_Sour_Pork.png";
-import Hotpot from "../assets/images/Hotpot.jpeg";
+import Hotpot from "../assets/images/HotPot.jpeg";
 import BeefNoodleSoup from "../assets/images/Beef_Noodle_Soup.png";
 import FriedRice from "../assets/images/Fried_Rice.png";
 
