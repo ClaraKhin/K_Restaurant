@@ -1,8 +1,37 @@
 import axios from "axios";
 
 
+const normalizeBaseUrl = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  return value.trim().replace(/\/+$/, "");
+};
+
+const resolveApiBaseUrl = () => {
+  const configuredBaseUrl = normalizeBaseUrl(import.meta.env.VITE_BACKEND_URL);
+
+  if (configuredBaseUrl) {
+    return configuredBaseUrl;
+  }
+
+  if (import.meta.env.DEV) {
+    return "http://localhost:8000";
+  }
+
+  throw new Error("Missing VITE_BACKEND_URL for production build.");
+};
+
 // axios instance with credentials and JSON content type to be sent to the backend
-const api = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8000", withCredentials: true, headers: { 'Content-Type': 'application/json', Accept: 'application/json' } });
+const api = axios.create({
+  baseURL: resolveApiBaseUrl(),
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
 
 
 // API endpoints

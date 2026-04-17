@@ -9,15 +9,39 @@ const cors = require("cors");
 const app = express();
 
 const PORT = config.port;
+const allowedOrigins = new Set(config.clientURLs);
+
+const isAllowedOrigin = (origin) => {
+    if (allowedOrigins.has(origin)) {
+        return true;
+    }
+
+    if (config.nodeEnv !== "production" && /^http:\/\/localhost:\d+$/.test(origin)) {
+        return true;
+    }
+
+    return false;
+};
+
+const corsOptions = {
+    credentials: true,
+    origin: (origin, callback) => {
+        if (!origin || isAllowedOrigin(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204,
+};
 
 connectDB();
 
 //middlewares
 
-app.use(cors({
-    credentials: true,
-    origin: ['http://localhost:5173', 'https://goldendynasty.vercel.app'],
-}));
+app.use(cors(corsOptions));
 // Stripe CLI webhook forwarding (keeps raw body for signature verification)
 // Example (replace 8000 with your PORT): stripe listen --forward-to localhost:8000/api/payment/webhook
 app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
