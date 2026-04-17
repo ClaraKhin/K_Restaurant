@@ -5,30 +5,15 @@ const config = require("./config");
 mongoose.set("bufferCommands", false);
 
 let isConnecting = false;
-let reconnectTimer = null;
-
-const clearReconnectTimer = () => {
-    if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
-        reconnectTimer = null;
-    }
-};
-
-const scheduleReconnect = () => {
-    if (reconnectTimer || isConnecting) {
-        return;
-    }
-
-    reconnectTimer = setTimeout(() => {
-        reconnectTimer = null;
-        void connectDB();
-    }, config.mongoRetryDelayMS);
-};
+let listenersAttached = false;
 
 const attachDatabaseListeners = () => {
     mongoose.connection.on("connected", () => {
-        clearReconnectTimer();
         console.log(`[MongoDB] Connected: ${mongoose.connection.host}`);
+    });
+
+    mongoose.connection.on("open", () => {
+        console.log("[MongoDB] Connection ready for operations");
     });
 
     mongoose.connection.on("error", (error) => {
@@ -36,12 +21,9 @@ const attachDatabaseListeners = () => {
     });
 
     mongoose.connection.on("disconnected", () => {
-        console.warn("[MongoDB] Disconnected. Retrying connection...");
-        scheduleReconnect();
+        console.error("[MongoDB] Disconnected");
     });
 };
-
-let listenersAttached = false;
 
 const connectDB = async () => {
     if (!listenersAttached) {
@@ -50,9 +32,7 @@ const connectDB = async () => {
     }
 
     if (!config.databaseURI) {
-        console.error("[MongoDB] MONGODB_URI is not configured.");
-        scheduleReconnect();
-        return null;
+        throw new Error("MONGODB_URI is not configured");
     }
 
     if (mongoose.connection.readyState === 1) {
@@ -66,27 +46,33 @@ const connectDB = async () => {
     isConnecting = true;
 
     try {
-        await mongoose.connect(config.databaseURI, {
+        console.log("[MongoDB] Connecting to Atlas...");
+
+        const connection = await mongoose.connect(config.databaseURI, {
             serverSelectionTimeoutMS: config.mongoServerSelectionTimeoutMS,
             socketTimeoutMS: config.mongoSocketTimeoutMS,
             connectTimeoutMS: config.mongoConnectTimeoutMS,
             autoIndex: false,
         });
 
-        clearReconnectTimer();
-        return mongoose.connection;
+        await connection.connection.db.admin().ping();
+        console.log("[MongoDB] Ping successful");
+
+        return connection.connection;
     } catch (error) {
         console.error("[MongoDB] Initial connection failed:", error.message);
-        scheduleReconnect();
-        return null;
+
+        if (mongoose.connection.readyState !== 0) {
+            await mongoose.disconnect();
+        }
+
+        throw error;
     } finally {
         isConnecting = false;
     }
 };
 
 const closeDB = async () => {
-    clearReconnectTimer();
-
     if (mongoose.connection.readyState !== 0) {
         await mongoose.connection.close();
     }

@@ -29,17 +29,23 @@ const shutdown = async (signal, exitCode = 0) => {
 };
 
 const startServer = async () => {
-    server = http.createServer(app);
+    try {
+        await connectDB();
 
-    server.listen(PORT, () => {
-        console.log(`[Startup] Server is listening on port ${PORT}`);
-        void connectDB();
-    });
+        server = http.createServer(app);
 
-    server.on("error", (error) => {
-        console.error("[Startup] HTTP server error:", error);
-        void shutdown("server-error", 1);
-    });
+        server.listen(PORT, () => {
+            console.log(`[Startup] Server is listening on port ${PORT}`);
+        });
+
+        server.on("error", (error) => {
+            console.error("[Startup] HTTP server error:", error);
+            void shutdown("server-error", 1);
+        });
+    } catch (error) {
+        console.error("[Startup] Failed to start server:", error);
+        process.exit(1);
+    }
 };
 
 process.on("SIGTERM", () => {
@@ -52,6 +58,7 @@ process.on("SIGINT", () => {
 
 process.on("unhandledRejection", (reason) => {
     console.error("[Process] Unhandled promise rejection:", reason);
+    void shutdown("unhandledRejection", 1);
 });
 
 process.on("uncaughtException", (error) => {
