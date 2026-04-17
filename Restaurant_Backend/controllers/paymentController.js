@@ -6,7 +6,15 @@ const Order = require("../models/orderModel");
 const Table = require("../models/tableModel");
 const mongoose = require("mongoose");
 
-const stripe = new Stripe(config.stripeSecretKey);
+const stripe = config.stripeSecretKey ? new Stripe(config.stripeSecretKey) : null;
+
+const ensureStripeConfigured = () => {
+    if (!stripe) {
+        throw createHttpError(500, "Stripe is not configured on the server");
+    }
+
+    return stripe;
+};
 
 const normalizeMoney = (value) => {
     const amount = Number(value);
@@ -163,6 +171,7 @@ const markOrderInProgress = async (orderId) => {
 
 const createOrder = async (req, res, next) => {
     try {
+        const stripeClient = ensureStripeConfigured();
         const { amount, orderId, order } = req.body;
         if (!amount) return next(createHttpError(400, "Amount is required"));
 
@@ -198,7 +207,7 @@ const createOrder = async (req, res, next) => {
             ...(customerName ? { customerName } : {}),
         };
 
-        const session = await stripe.checkout.sessions.create({
+        const session = await stripeClient.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
                 {
@@ -230,10 +239,11 @@ const createOrder = async (req, res, next) => {
 
 const verifyPayment = async (req, res, next) => {
     try {
+        const stripeClient = ensureStripeConfigured();
         const sessionId = req.query.session_id || req.body.session_id;
         if (!sessionId) return next(createHttpError(400, "session_id is required"));
 
-        const session = await stripe.checkout.sessions.retrieve(sessionId, {
+        const session = await stripeClient.checkout.sessions.retrieve(sessionId, {
             expand: ["payment_intent"],
         });
 
@@ -258,7 +268,7 @@ const verifyPayment = async (req, res, next) => {
 
         let paymentIntent = null;
         try {
-            paymentIntent = await stripe.paymentIntents.retrieve(paymentId, {
+            paymentIntent = await stripeClient.paymentIntents.retrieve(paymentId, {
                 expand: ["latest_charge", "payment_method"],
             });
 
@@ -398,6 +408,14 @@ const getReceiptByOrderId = async (req, res, next) => {
 };
 
 const webhookHandler = async (req, res) => {
+    let stripeClient;
+
+    try {
+        stripeClient = ensureStripeConfigured();
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+
     const sig = req.headers["stripe-signature"];
     const webhookSecret = config.stripeWebhookSecret;
     if (!webhookSecret) {
@@ -407,7 +425,7 @@ const webhookHandler = async (req, res) => {
 
     let event;
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+        event = stripeClient.webhooks.constructEvent(req.body, sig, webhookSecret);
     } catch (err) {
         console.error("Stripe signature verification failed:", err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -455,7 +473,7 @@ const webhookHandler = async (req, res) => {
 
         // Optional enrichment: these fields can be absent on checkout session payload.
         try {
-            const paymentIntent = await stripe.paymentIntents.retrieve(paymentId, {
+            const paymentIntent = await stripeClient.paymentIntents.retrieve(paymentId, {
                 expand: ["latest_charge", "payment_method"],
             });
 

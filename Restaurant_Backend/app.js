@@ -1,14 +1,20 @@
 require("dotenv").config();
+
 const express = require("express");
-const connectDB = require("./config/database");
-const config = require("./config/config");
-const globalErrorHandler = require("./middlewares/globalErrorHandler");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-// const createHttpError = require("http-errors")
+const createHttpError = require("http-errors");
+const mongoose = require("mongoose");
+
+const config = require("./config/config");
+const globalErrorHandler = require("./middlewares/globalErrorHandler");
+const requireDatabaseConnection = require("./middlewares/requireDatabaseConnection");
+
 const app = express();
 
-const PORT = config.port;
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
 const allowedOrigins = new Set(config.clientURLs);
 const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/i;
 const vercelPreviewOriginPattern = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
@@ -35,46 +41,74 @@ const isAllowedOrigin = (origin) => {
 
 const corsOptions = {
     credentials: true,
-    origin: (origin, callback) => {
+    origin(origin, callback) {
         if (!origin || isAllowedOrigin(origin)) {
             return callback(null, true);
         }
 
-        return callback(new Error(`CORS blocked for origin: ${origin}`));
+        const corsError = new Error(`CORS blocked for origin: ${origin}`);
+        corsError.statusCode = 403;
+        return callback(corsError);
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 204,
 };
 
-connectDB();
-
-//middlewares
+const getDatabaseStatus = () => {
+    switch (mongoose.connection.readyState) {
+        case 1:
+            return "connected";
+        case 2:
+            return "connecting";
+        case 3:
+            return "disconnecting";
+        default:
+            return "disconnected";
+    }
+};
 
 app.use(cors(corsOptions));
-// Stripe CLI webhook forwarding (keeps raw body for signature verification)
-// Example (replace 8000 with your PORT): stripe listen --forward-to localhost:8000/api/payment/webhook
+app.options(/.*/, cors(corsOptions));
+
+// Stripe webhook must keep the raw body for signature verification.
 app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
-app.use(express.json()); // Parse JSON request bodies (other routes)
-
-app.use(cookieParser()); // Parse cookie headers and attach them to req.cookies
-
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hello from POS server!" })
+    res.status(200).json({
+        success: true,
+        message: "Golden Dynasty POS API is running",
+        environment: config.nodeEnv,
+        database: getDatabaseStatus(),
+    });
 });
 
-//Other endpoints
+app.get("/health", (req, res) => {
+    const database = getDatabaseStatus();
+    const isHealthy = database === "connected" || database === "connecting";
+
+    res.status(isHealthy ? 200 : 503).json({
+        success: isHealthy,
+        uptime: process.uptime(),
+        database,
+        timestamp: new Date().toISOString(),
+    });
+});
+
+app.use("/api", requireDatabaseConnection);
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/order", require("./routes/orderRoute"));
 app.use("/api/table", require("./routes/tableRoute"));
 app.use("/api/category", require("./routes/categoryRoute"));
 app.use("/api/payment", require("./routes/paymentRoute"));
 
-//Global Error Handler
+app.use((req, res, next) => {
+    next(createHttpError(404, `Route not found: ${req.method} ${req.originalUrl}`));
+});
+
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;
