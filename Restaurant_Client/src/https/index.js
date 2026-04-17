@@ -16,11 +16,8 @@ const resolveApiBaseUrl = () => {
     return configuredBaseUrl;
   }
 
-  if (import.meta.env.DEV) {
-    return "http://localhost:8000";
-  }
-
-  throw new Error("Missing VITE_BACKEND_URL for production build.");
+  const envFileName = import.meta.env.DEV ? ".env.local" : "Vercel Environment Variables";
+  throw new Error(`Missing VITE_BACKEND_URL. Add it to ${envFileName}.`);
 };
 
 // axios instance with credentials and JSON content type to be sent to the backend

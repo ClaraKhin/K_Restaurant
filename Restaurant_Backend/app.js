@@ -10,13 +10,23 @@ const app = express();
 
 const PORT = config.port;
 const allowedOrigins = new Set(config.clientURLs);
+const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/i;
+const vercelPreviewOriginPattern = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
+
+const normalizeOrigin = (origin) => origin.trim().replace(/\/+$/, "");
 
 const isAllowedOrigin = (origin) => {
-    if (allowedOrigins.has(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin);
+
+    if (allowedOrigins.has(normalizedOrigin)) {
         return true;
     }
 
-    if (config.nodeEnv !== "production" && /^http:\/\/localhost:\d+$/.test(origin)) {
+    if (localhostOriginPattern.test(normalizedOrigin)) {
+        return true;
+    }
+
+    if (config.allowVercelPreviewOrigins && vercelPreviewOriginPattern.test(normalizedOrigin)) {
         return true;
     }
 

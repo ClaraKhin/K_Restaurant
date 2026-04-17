@@ -34,8 +34,11 @@ const Login = () => {
     },
     onError: (error) => {
       const { response } = error;
-      console.log(response);
-      enqueueSnackbar(response.data.message, { variant: "error" });
+      console.log(response || error);
+      enqueueSnackbar(
+        response?.data?.message || "Login failed. Check backend URL, CORS, and credentials.",
+        { variant: "error" }
+      );
     },
   });
 
