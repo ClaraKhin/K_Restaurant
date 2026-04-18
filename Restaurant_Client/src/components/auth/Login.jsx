@@ -36,15 +36,16 @@ const Login = () => {
       const { response } = error;
       console.log(response || error);
       enqueueSnackbar(
-        response?.data?.message || "Login failed. Check backend URL, CORS, and credentials.",
+        response?.data?.message ||
+          "Login failed. Check backend URL, CORS, and credentials.",
         { variant: "error" }
       );
     },
   });
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="flex w-full flex-col items-center justify-center">
+      <form onSubmit={handleSubmit} className="w-full">
         <div>
           <label
             className="block text-[#ababab]"
@@ -65,6 +66,7 @@ const Login = () => {
               paddingBottom: "1.25rem",
               paddingLeft: "1rem",
               paddingRight: "1rem",
+              width: "100%",
             }}
           >
             <input
@@ -74,7 +76,7 @@ const Login = () => {
               onChange={handleChange}
               placeholder="Enter email address"
               className="focus:outline-none"
-              style={{ flex: 1, color: "#ffffff" }}
+              style={{ flex: 1, color: "#ffffff", width: "100%" }}
               required
             />
           </div>

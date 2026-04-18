@@ -52,8 +52,8 @@ const Register = ({ setIsRegister }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="w-full">
         <div>
           <label
             className="block text-[#ababab]"

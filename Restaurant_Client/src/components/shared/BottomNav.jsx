@@ -128,7 +128,7 @@ const BottomNav = () => {
         <AlertFilled className="text-2xl inline" />
       </button>
 
-      <Modal title="Alert" isOpen={isModalOpen} onClose={closeModal}>
+      <Modal title="Make Order" isOpen={isModalOpen} onClose={closeModal}>
         <div>
           <label
             className="block text-[#ababab]"
