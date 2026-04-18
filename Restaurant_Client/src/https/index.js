@@ -30,6 +30,8 @@ const api = axios.create({
   },
 });
 
+api.defaults.withCredentials = true;
+
 
 // API endpoints
 export const login = (data) => api.post("/api/user/login", data);

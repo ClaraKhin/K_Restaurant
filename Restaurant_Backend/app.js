@@ -39,11 +39,25 @@ const isAllowedOrigin = (origin) => {
     return false;
 };
 
+const resolveAllowedOrigin = (origin) => {
+    if (!origin) {
+        return null;
+    }
+
+    const normalizedOrigin = normalizeOrigin(origin);
+    return isAllowedOrigin(normalizedOrigin) ? normalizedOrigin : null;
+};
+
 const corsOptions = {
     credentials: true,
     origin(origin, callback) {
-        if (!origin || isAllowedOrigin(origin)) {
+        if (!origin) {
             return callback(null, true);
+        }
+
+        const allowedOrigin = resolveAllowedOrigin(origin);
+        if (allowedOrigin) {
+            return callback(null, allowedOrigin);
         }
 
         const corsError = new Error(`CORS blocked for origin: ${origin}`);
@@ -51,7 +65,7 @@ const corsOptions = {
         return callback(corsError);
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     optionsSuccessStatus: 204,
 };
 

@@ -31,6 +31,7 @@ const config = Object.freeze({
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    cookieDomain: process.env.COOKIE_DOMAIN?.trim() || undefined,
     clientURL,
     clientURLs,
     allowVercelPreviewOrigins: (process.env.ALLOW_VERCEL_PREVIEW_ORIGINS || "true").trim().toLowerCase() !== "false",

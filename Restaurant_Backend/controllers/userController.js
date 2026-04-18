@@ -4,11 +4,25 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
-const authCookieOptions = {
-    httpOnly: true,
-    secure: config.nodeEnv === "production",
-    sameSite: config.nodeEnv === "production" ? "none" : "lax",
-    path: "/",
+const isProduction = config.nodeEnv === "production";
+
+const getAuthCookieOptions = () => {
+    const cookieOptions = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        path: "/",
+    };
+
+    if (isProduction) {
+        cookieOptions.partitioned = true;
+    }
+
+    if (config.cookieDomain) {
+        cookieOptions.domain = config.cookieDomain;
+    }
+
+    return cookieOptions;
 };
 
 
@@ -66,7 +80,10 @@ const login = async (req, res, next) => {
         // Generate and set the access token 
         const accessToken = jwt.sign({ _id: isUserPresent._id }, config.accessTokenSecret, { expiresIn: "1d" });// Generate an access token with a 1-day expiration time 
         // Set the access token as a cookie 
-        res.cookie("accessToken", accessToken, { ...authCookieOptions, maxAge: 30 * 60 * 60 * 1000 });
+        res.cookie("accessToken", accessToken, {
+            ...getAuthCookieOptions(),
+            maxAge: 24 * 60 * 60 * 1000,
+        });
         res.status(200).json({ success: true, message: "User is successfully logged in!", data: isUserPresent }); // Send a success response
     } catch (error) {
         next(error);
@@ -76,7 +93,7 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
-        res.clearCookie("accessToken", authCookieOptions);
+        res.clearCookie("accessToken", getAuthCookieOptions());
         res.status(200).json({ success: true, message: "User is successfully logged out!" });
     } catch (error) {
         next(error);
