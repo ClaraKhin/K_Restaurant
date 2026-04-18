@@ -3,7 +3,10 @@ import { popularDishes } from "../../constants";
 
 const PopularDishes = () => {
   return (
-    <div className="mt-6" style={{ marginTop: "1.5rem" }}>
+    <div
+      className="mt-6"
+      style={{ marginTop: "1.5rem"}}
+    >
       <div className="bg-[#1d1716] w-full rounded-lg">
         <div
           className="flex justify-between items-center"

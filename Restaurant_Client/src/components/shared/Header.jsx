@@ -109,27 +109,26 @@ const Header = () => {
             <BellOutlined style={{ color: "#FFFFFF" }} className="text-2xl" />
           </div>
 
-          <div
-            className="flex min-w-0 items-center gap-3 cursor-pointer"
-            onClick={openUserModal}
-          >
-            <UserOutlined
-              style={{ color: "#FFFFFF", cursor: "pointer" }}
-              className="text-2xl"
-            />
-            <div className="flex min-w-0 flex-col items-start ">
-              <h1
-                className="max-w-[140px] truncate text-[#FFFFFF] sm:max-w-none"
-                style={{ fontSize: "1rem", fontWeight: 600 }}
-              >
-                {userData.name || "Test User"}
-              </h1>
-              <p
-                className="max-w-[140px] truncate text-[#ababab] sm:max-w-none"
-                style={{ fontSize: "0.75rem", fontWeight: 500 }}
-              >
-                {userData.role || "Role"}
-              </p>
+          <div className="flex min-w-0 items-center gap-3 cursor-pointer">
+            <div className="flex items-center gap-3" onClick={openUserModal}>
+              <UserOutlined
+                style={{ color: "#FFFFFF", cursor: "pointer" }}
+                className="text-2xl"
+              />
+              <div className="flex min-w-0 flex-col items-start ">
+                <h1
+                  className="max-w-[140px] truncate text-[#FFFFFF] sm:max-w-none"
+                  style={{ fontSize: "1rem", fontWeight: 600 }}
+                >
+                  {userData.name || "Test User"}
+                </h1>
+                <p
+                  className="max-w-[140px] truncate text-[#ababab] sm:max-w-none"
+                  style={{ fontSize: "0.75rem", fontWeight: 500 }}
+                >
+                  {userData.role || "Role"}
+                </p>
+              </div>
             </div>
 
             <LogoutOutlined

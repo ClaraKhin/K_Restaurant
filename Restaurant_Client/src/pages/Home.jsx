@@ -42,7 +42,13 @@ const Home = () => {
       </div>
 
       {/* Right */}
-      <div className="w-full px-4 pb-4 lg:flex-[2] lg:px-0 lg:pr-6">
+      <div
+        className="w-full lg:flex-[2] lg:px-0 lg:pr-6"
+        style={{
+          paddingLeft: "0.7rem",
+          paddingRight: "0.7rem",
+        }}
+      >
         <PopularDishes />
       </div>
 
