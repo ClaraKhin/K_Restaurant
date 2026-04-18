@@ -175,6 +175,12 @@ const createOrder = async (req, res, next) => {
         const { amount, orderId, order } = req.body;
         if (!amount) return next(createHttpError(400, "Amount is required"));
 
+        const clientUrl = (
+            process.env.CLIENT_URL ||
+            req.get("origin") ||
+            (config.nodeEnv === "production" ? "" : config.clientURL)
+        ).trim().replace(/\/+$/, "");
+
         let stripeOrderId = orderId ? String(orderId) : `temp-order-${Date.now()}`;
         let stripeTableId = null;
         let customerName = null;
@@ -222,8 +228,8 @@ const createOrder = async (req, res, next) => {
             mode: "payment",
             metadata: stripeMetadata,
             payment_intent_data: { metadata: stripeMetadata },
-            success_url: `${config.clientURL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${config.clientURL}/cancel`,
+            success_url: `${clientUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${clientUrl}/cancel`,
         });
 
         res.status(200).json({
