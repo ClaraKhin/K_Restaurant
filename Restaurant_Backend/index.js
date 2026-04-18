@@ -10,7 +10,7 @@ const PORT = config.port;
 let server;
 let isShuttingDown = false;
 
-const shutdown = async (signal, exitCode = 0) => {
+const shutdown = async (signal) => {
     if (isShuttingDown) {
         return;
     }
@@ -25,27 +25,21 @@ const shutdown = async (signal, exitCode = 0) => {
     }
 
     await closeDB();
-    process.exit(exitCode);
 };
 
 const startServer = async () => {
-    try {
-        await connectDB();
+    await connectDB();
 
-        server = http.createServer(app);
+    server = http.createServer(app);
 
-        server.listen(PORT, () => {
-            console.log(`[Startup] Server is listening on port ${PORT}`);
-        });
+    server.listen(PORT, () => {
+        console.log(`[Startup] Server is listening on port ${PORT}`);
+    });
 
-        server.on("error", (error) => {
-            console.error("[Startup] HTTP server error:", error);
-            void shutdown("server-error", 1);
-        });
-    } catch (error) {
-        console.error("[Startup] Failed to start server:", error);
-        process.exit(1);
-    }
+    server.on("error", (error) => {
+        console.error("[Startup] HTTP server error:", error);
+        void shutdown("server-error");
+    });
 };
 
 process.on("SIGTERM", () => {
@@ -58,12 +52,12 @@ process.on("SIGINT", () => {
 
 process.on("unhandledRejection", (reason) => {
     console.error("[Process] Unhandled promise rejection:", reason);
-    void shutdown("unhandledRejection", 1);
+    void shutdown("unhandledRejection");
 });
 
 process.on("uncaughtException", (error) => {
     console.error("[Process] Uncaught exception:", error);
-    void shutdown("uncaughtException", 1);
+    void shutdown("uncaughtException");
 });
 
 void startServer();

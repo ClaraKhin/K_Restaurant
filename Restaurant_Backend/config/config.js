@@ -19,7 +19,9 @@ const clientURLs = parseOrigins(process.env.CLIENT_URLS, clientURL);
 
 const config = Object.freeze({
     port: parseNumber(process.env.PORT, 3000),
-    databaseURI: process.env.MONGODB_URI || "mongodb://localhost:27017/restaurant",
+    databaseURI:
+        process.env.MONGODB_URI ||
+        (process.env.NODE_ENV === "production" ? undefined : "mongodb://localhost:27017/restaurant"),
     mongoServerSelectionTimeoutMS: parseNumber(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS, 10000),
     mongoSocketTimeoutMS: parseNumber(process.env.MONGO_SOCKET_TIMEOUT_MS, 45000),
     mongoConnectTimeoutMS: parseNumber(process.env.MONGO_CONNECT_TIMEOUT_MS, 10000),

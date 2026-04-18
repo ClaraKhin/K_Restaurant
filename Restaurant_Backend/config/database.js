@@ -32,7 +32,8 @@ const connectDB = async () => {
     }
 
     if (!config.databaseURI) {
-        throw new Error("MONGODB_URI is not configured");
+        console.warn("[MongoDB] MONGODB_URI is not configured. Starting server without a database connection.");
+        return null;
     }
 
     if (mongoose.connection.readyState === 1) {
@@ -46,7 +47,7 @@ const connectDB = async () => {
     isConnecting = true;
 
     try {
-        console.log("[MongoDB] Connecting to Atlas...");
+        console.log("[MongoDB] Attempting database connection...");
 
         const connection = await mongoose.connect(config.databaseURI, {
             serverSelectionTimeoutMS: config.mongoServerSelectionTimeoutMS,
@@ -60,13 +61,13 @@ const connectDB = async () => {
 
         return connection.connection;
     } catch (error) {
-        console.error("[MongoDB] Initial connection failed:", error.message);
+        console.error("[MongoDB] Initial connection failed. Server will continue without database access:", error.message);
 
         if (mongoose.connection.readyState !== 0) {
             await mongoose.disconnect();
         }
 
-        throw error;
+        return null;
     } finally {
         isConnecting = false;
     }
