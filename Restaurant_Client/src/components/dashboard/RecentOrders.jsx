@@ -213,13 +213,13 @@ const RecentOrders = () => {
         Recent Orders
       </h2>
 
-      <div className="overflow-x-auto">
+      <div className="dashboard-grid-scroll overflow-x-auto">
         <div
-          className="w-full text-left text-[#f5f5f5]"
+          className="dashboard-grid-table w-full text-left text-[#f5f5f5]"
           style={{ minWidth: "1100px" }}
         >
           <div
-            className="bg-[#2A221E] text-[#ababab]"
+            className="dashboard-grid-header bg-[#2A221E] text-[#ababab]"
             style={{ display: "grid", gridTemplateColumns: gridCols }}
           >
             <div style={{ padding: "0.75rem" }}>Order ID</div>
@@ -269,7 +269,7 @@ const RecentOrders = () => {
               return (
                 <div
                   key={order.key}
-                  className="border-b border-gray-600 hover:bg-[#2A221E]"
+                  className="dashboard-grid-row border-b border-gray-600 hover:bg-[#2A221E]"
                   style={{
                     display: "grid",
                     gridTemplateColumns: gridCols,
@@ -277,6 +277,7 @@ const RecentOrders = () => {
                   }}
                 >
                   <div
+                    data-label="Order ID"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 700, padding: "1rem" }}
                   >
@@ -284,6 +285,7 @@ const RecentOrders = () => {
                   </div>
 
                   <div
+                    data-label="Customer"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >
@@ -291,6 +293,7 @@ const RecentOrders = () => {
                   </div>
 
                   <div
+                    data-label="Status"
                     style={{
                       padding: "1rem",
                       maxWidth: "170px",
@@ -362,9 +365,11 @@ const RecentOrders = () => {
                     )}
                   </div>
 
-                  <div style={{ padding: "1rem" }}>{order.dateTimeText}</div>
+                  <div data-label="Date & Time" style={{ padding: "1rem" }}>
+                    {order.dateTimeText}
+                  </div>
 
-                  <div style={{ padding: "1rem" }}>
+                  <div data-label="Items" style={{ padding: "1rem" }}>
                     <div className="text-[#f5f5f5]" style={{ fontWeight: 600 }}>
                       {(Array.isArray(order.items) ? order.items.length : 0) +
                         " Items"}
@@ -372,6 +377,7 @@ const RecentOrders = () => {
                   </div>
 
                   <div
+                    data-label="Table No"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >
@@ -379,6 +385,7 @@ const RecentOrders = () => {
                   </div>
 
                   <div
+                    data-label="Total"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 700, padding: "1rem" }}
                   >
@@ -386,6 +393,7 @@ const RecentOrders = () => {
                   </div>
 
                   <div
+                    data-label="Payment"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >

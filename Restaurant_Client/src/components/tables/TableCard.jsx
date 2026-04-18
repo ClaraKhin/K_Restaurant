@@ -19,11 +19,11 @@ const TableCard = ({ id, name, status, initials, seats }) => {
   return (
     <div
       onClick={() => handleClick(name)}
-      className="w-[450px] bg-[#1d1716] hover:bg-[#3A322E] rounded-lg cursor-pointer"
+      className="w-full max-w-[450px] cursor-pointer rounded-lg bg-[#1d1716] hover:bg-[#3A322E] lg:w-[450px]"
       style={{ padding: "1rem" }}
     >
       <div
-        className="flex items-center justify-between "
+        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
         style={{ paddingLeft: "0.25rem", paddingRight: "0.25rem" }}
       >
         <h1
@@ -45,7 +45,7 @@ const TableCard = ({ id, name, status, initials, seats }) => {
             status === "Booked"
               ? "text-green-600 bg-[#2e4a40]"
               : "bg-[#664a04] text-[#FFFFFF]"
-          } rounded-lg`}
+          } self-start rounded-lg sm:self-auto`}
           style={{
             paddingLeft: "0.5rem",
             paddingRight: "0.5rem",

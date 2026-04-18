@@ -7,7 +7,7 @@ const CustomerInfo = () => {
   const customerData = useSelector((state) => state.customer);
   return (
     <div
-      className="flex items-center justify-between"
+      className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
       style={{
         paddingLeft: "1rem",
         paddingRight: "1rem",

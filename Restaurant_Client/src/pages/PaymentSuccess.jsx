@@ -97,7 +97,7 @@ const PaymentSuccess = () => {
   };
 
   return (
-    <section className="bg-[#2a221e] min-h-screen flex flex-col items-center justify-center text-center">
+    <section className="bg-[#2a221e] min-h-screen flex flex-col items-center justify-center px-4 text-center">
       <div
         className="bg-[#1D1716] rounded-lg max-w-md w-full shadow-lg"
         style={{ padding: "2rem" }}
@@ -137,7 +137,7 @@ const PaymentSuccess = () => {
                 {details.paymentId || "N/A"}
               </p>
             </div> */}
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               {/* <button
                 onClick={() => setIsReceiptOpen(true)}
                 className="w-full"

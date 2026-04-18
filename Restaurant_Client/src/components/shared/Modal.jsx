@@ -16,7 +16,7 @@ const Modal = ({ title, onClose, isOpen, children }) => {
       }}
     >
       <div
-        className="bg-[#1D1716] w-[500px] rounded-lg shadow-lg w-full max-w-lg"
+        className="w-full max-w-lg rounded-lg bg-[#1D1716] shadow-lg"
         style={{ marginLeft: "1rem", marginRight: "1rem", padding: "1rem" }}
       >
         <div

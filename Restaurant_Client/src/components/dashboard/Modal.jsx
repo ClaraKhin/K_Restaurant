@@ -57,9 +57,11 @@ const Modal = ({ setTableModalOpen }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-[#3A322E] rounded-lg w-96 "
+        className="w-full max-w-md rounded-lg bg-[#3A322E]"
         style={{
           padding: "1.5rem",
+          marginLeft: "1rem",
+          marginRight: "1rem",
           boxShadow:
             "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(29, 23, 22, 0.5)",
         }}

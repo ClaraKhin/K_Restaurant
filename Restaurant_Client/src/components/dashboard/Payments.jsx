@@ -122,13 +122,13 @@ const Payments = () => {
         Payments
       </h2>
 
-      <div className="overflow-x-auto">
+      <div className="dashboard-grid-scroll overflow-x-auto">
         <div
-          className="w-full text-left text-[#f5f5f5]"
+          className="dashboard-grid-table w-full text-left text-[#f5f5f5]"
           style={{ minWidth: "1000px" }}
         >
           <div
-            className="bg-[#2A221E] text-[#ababab]"
+            className="dashboard-grid-header bg-[#2A221E] text-[#ababab]"
             style={{ display: "grid", gridTemplateColumns: gridCols }}
           >
             <div style={{ padding: "0.75rem" }}>Payment ID</div>
@@ -170,7 +170,7 @@ const Payments = () => {
               return (
                 <div
                   key={p.key}
-                  className="border-b border-gray-600 hover:bg-[#2A221E]"
+                  className="dashboard-grid-row border-b border-gray-600 hover:bg-[#2A221E]"
                   style={{
                     display: "grid",
                     gridTemplateColumns: gridCols,
@@ -178,6 +178,7 @@ const Payments = () => {
                   }}
                 >
                   <div
+                    data-label="Payment ID"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 700, padding: "1rem" }}
                   >
@@ -185,6 +186,7 @@ const Payments = () => {
                   </div>
 
                   <div
+                    data-label="Order ID"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >
@@ -192,17 +194,22 @@ const Payments = () => {
                   </div>
 
                   <div
+                    data-label="Customer"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >
                     {p.customer}
                   </div>
 
-                  <div style={{ padding: "1rem", fontWeight: 600 }}>
+                  <div
+                    data-label="Method"
+                    style={{ padding: "1rem", fontWeight: 600 }}
+                  >
                     {p.method}
                   </div>
 
                   <div
+                    data-label="Amount"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 700, padding: "1rem" }}
                   >
@@ -210,9 +217,12 @@ const Payments = () => {
                     {p.currency ? p.currency.toUpperCase() : ""}
                   </div>
 
-                  <div style={{ padding: "1rem" }}>{dateText}</div>
+                  <div data-label="Date & Time" style={{ padding: "1rem" }}>
+                    {dateText}
+                  </div>
 
                   <div
+                    data-label="Receipts"
                     className="text-[#f5f5f5]"
                     style={{ fontWeight: 600, padding: "1rem" }}
                   >

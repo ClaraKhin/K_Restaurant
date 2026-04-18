@@ -40,7 +40,7 @@ const Header = () => {
   return (
     <>
       <header
-        className="flex justify-between items-center  bg-[#1d1716]"
+        className="flex flex-col gap-4 bg-[#1d1716] lg:flex-row lg:items-center lg:justify-between"
         style={{
           paddingLeft: "1rem",
           paddingRight: "1rem",
@@ -51,9 +51,13 @@ const Header = () => {
         {/* logo */}
         <div
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 cursor-pointer "
+          className="flex w-full cursor-pointer items-center justify-center gap-2 sm:justify-start lg:w-auto"
         >
-          <img src={logo} alt="logo" className="h-15 w-15 rounded-full" />
+          <img
+            src={logo}
+            alt="logo"
+            className="h-12 w-12 rounded-full sm:h-15 sm:w-15"
+          />
           <h1
             className="text-[#FFFFFF]"
             style={{ fontSize: "1.25rem", fontWeight: "600" }}
@@ -63,7 +67,7 @@ const Header = () => {
         </div>
         {/* Search */}
         <div
-          className="flex items-center gap-4 bg-[#2a221e] rounded-[15px] w-[500px]"
+          className="flex w-full items-center gap-3 rounded-[15px] bg-[#2a221e] lg:w-[500px]"
           style={{
             paddingLeft: "1.25rem",
             paddingRight: "1.25rem",
@@ -79,12 +83,12 @@ const Header = () => {
             type="text"
             placeholder="Search"
             style={{ color: "#FFFFFF", padding: "5px" }}
-            className="outline-none input-search "
+            className="outline-none input-search w-full min-w-0 bg-transparent text-sm sm:text-base"
           />
         </div>
         {/* Logged User Info */}
 
-        <div className="flex items-center gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:justify-end lg:w-auto lg:gap-4">
           {userData.role === "Admin" && (
             <div
               onClick={() => navigate("/dashboard")}
@@ -106,22 +110,22 @@ const Header = () => {
           </div>
 
           <div
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex min-w-0 items-center gap-3 cursor-pointer"
             onClick={openUserModal}
           >
             <UserOutlined
               style={{ color: "#FFFFFF", cursor: "pointer" }}
               className="text-2xl"
             />
-            <div className="flex flex-col items-start ">
+            <div className="flex min-w-0 flex-col items-start ">
               <h1
-                className=" text-[#FFFFFF]"
+                className="max-w-[140px] truncate text-[#FFFFFF] sm:max-w-none"
                 style={{ fontSize: "1rem", fontWeight: 600 }}
               >
                 {userData.name || "Test User"}
               </h1>
               <p
-                className="text-[#ababab]"
+                className="max-w-[140px] truncate text-[#ababab] sm:max-w-none"
                 style={{ fontSize: "0.75rem", fontWeight: 500 }}
               >
                 {userData.role || "Role"}
@@ -130,7 +134,7 @@ const Header = () => {
 
             <LogoutOutlined
               onClick={handleLogout}
-              className="text-2xl"
+              className="shrink-0 text-2xl"
               style={{ color: "#FFFFFF", marginLeft: "0.5rem" }}
             />
           </div>

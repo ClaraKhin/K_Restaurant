@@ -16,7 +16,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
   return (
     <>
       <Modal title="Order Receipt" isOpen={isOpen} onClose={onClose}>
-        <div className=" flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <div
             className=" rounded-lg border border-[#3a2f2a]"
             style={{
@@ -25,7 +25,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
             }}
           >
             <div
-              className="flex items-center justify-between gap-4"
+              className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
               style={{ marginBottom: "1rem" }}
             >
               <div className="flex flex-col items-start">
@@ -42,7 +42,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
                   Paid order summary for printing and reconciliation.
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <p className="text-[#F6B100]" style={{ fontWeight: 700 }}>
                   {shortOrderId}
                 </p>
@@ -55,7 +55,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
             </div>
 
             <div
-              className="grid grid-cols-2 gap-3 text-sm"
+              className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2"
               style={{ marginBottom: "1rem" }}
             >
               <div className="flex flex-col items-start">
@@ -105,7 +105,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
               }}
             >
               <div
-                className="grid grid-cols-[1.6fr_0.6fr_0.8fr_0.8fr] text-[#F6B100]"
+                className="receipt-items-header grid grid-cols-[1.6fr_0.6fr_0.8fr_0.8fr] text-[#F6B100]"
                 style={{
                   padding: "0.75rem 1rem",
                   backgroundColor: "#211917",
@@ -139,21 +139,33 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
                 items.map((item, index) => (
                   <div
                     key={`${item.name}-${index}`}
-                    className="grid grid-cols-[1.6fr_0.6fr_0.8fr_0.8fr] text-[#ffffff]"
+                    className="receipt-item-row grid grid-cols-[1.6fr_0.6fr_0.8fr_0.8fr] text-[#ffffff]"
                     style={{
                       padding: "0.75rem 1rem",
                       fontSize: "0.8rem",
                       borderTop: index === 0 ? "none" : "1px solid #2d2420",
                     }}
                   >
-                    <p>{item?.name || "Unknown item"}</p>
-                    <p className="text-center" style={{ fontSize: "0.8rem" }}>
+                    <p data-label="Item">{item?.name || "Unknown item"}</p>
+                    <p
+                      data-label="Qty"
+                      className="text-center"
+                      style={{ fontSize: "0.8rem" }}
+                    >
                       {item?.quantity ?? 0}
                     </p>
-                    <p className="text-right" style={{ fontSize: "0.8rem" }}>
+                    <p
+                      data-label="Price"
+                      className="text-right"
+                      style={{ fontSize: "0.8rem" }}
+                    >
                       ${toMoney(item?.pricePerQuantity)}
                     </p>
-                    <p className="text-right" style={{ fontSize: "0.8rem" }}>
+                    <p
+                      data-label="Total"
+                      className="text-right"
+                      style={{ fontSize: "0.8rem" }}
+                    >
                       ${toMoney(item?.price)}
                     </p>
                   </div>
@@ -162,7 +174,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
             </div>
 
             <div className="flex justify-end">
-              <div className="w-full max-w-[260px] space-y-2">
+              <div className="w-full max-w-full space-y-2 sm:max-w-[260px]">
                 <div
                   className="flex items-center justify-between text-[#ababab]"
                   style={{ fontWeight: 600, fontSize: "0.875rem" }}
@@ -194,7 +206,7 @@ const ReceiptModal = ({ isOpen, onClose, onPrint, receipt }) => {
             </div>
           </div>
 
-          <div className="receipt-print-hidden flex items-center justify-around gap-3">
+          <div className="receipt-print-hidden flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-around">
             <button
               onClick={onClose}
               style={{

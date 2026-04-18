@@ -33,9 +33,9 @@ const Tables = () => {
       : tablesData;
 
   return (
-    <section className="bg-[#2A221E] h-[calc(100vh-5rem)] overflow-hidden">
+    <section className="bg-[#2A221E] min-h-[calc(100vh-5rem)] overflow-hidden lg:h-[calc(100vh-5rem)]">
       <div
-        className="flex items-center justify-between"
+        className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
         style={{
           paddingLeft: "2rem",
           paddingRight: "2rem",
@@ -54,9 +54,10 @@ const Tables = () => {
           </h1>
         </div>
 
-        <div className="flex items-center justify-around gap-4">
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:gap-4 lg:w-auto lg:justify-around">
           <button
             onClick={() => setStatus("all")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "all" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "all" ? "#FAF0DC" : "",
@@ -74,6 +75,7 @@ const Tables = () => {
           </button>
           <button
             onClick={() => setStatus("booked")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "booked" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "booked" ? "#FAF0DC" : "",
@@ -92,10 +94,10 @@ const Tables = () => {
         </div>
       </div>
       <div
-        className="flex flex-wrap gap-6 items-center justify-center h-[calc(100vh-9rem-7rem)] overflow-y-scroll"
+        className="flex h-auto flex-wrap items-stretch justify-center gap-4 overflow-y-visible sm:gap-6 lg:h-[calc(100vh-9rem-7rem)] lg:overflow-y-scroll"
         style={{
-          paddingLeft: "2.5rem",
-          paddingRight: "2.5rem",
+          paddingLeft: "1rem",
+          paddingRight: "1rem",
           paddingTop: "1rem",
           paddingBottom: "1rem",
           scrollbarWidth: "none",

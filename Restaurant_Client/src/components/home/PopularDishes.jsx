@@ -3,10 +3,7 @@ import { popularDishes } from "../../constants";
 
 const PopularDishes = () => {
   return (
-    <div
-      className="mt-6"
-      style={{ marginTop: "1.5rem", paddingRight: "1.5rem" }}
-    >
+    <div className="mt-6" style={{ marginTop: "1.5rem" }}>
       <div className="bg-[#1d1716] w-full rounded-lg">
         <div
           className="flex justify-between items-center"
@@ -40,14 +37,14 @@ const PopularDishes = () => {
             return (
               <div
                 key={dish.id}
-                className="flex items-center gap-5 bg-[#2A221E] rounded-[15px] "
+                className="flex items-center gap-4 rounded-[15px] bg-[#2A221E] sm:gap-5"
                 style={{
                   paddingLeft: "1.5rem",
                   paddingRight: "1.5rem",
                   paddingTop: "1rem",
                   paddingBottom: "1rem",
-                  marginLeft: "1.5rem",
-                  marginRight: "1.5rem",
+                  marginLeft: "1rem",
+                  marginRight: "1rem",
                   marginTop: "1rem",
                   marginBottom: "1rem",
                 }}

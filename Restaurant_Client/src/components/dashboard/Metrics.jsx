@@ -154,18 +154,14 @@ const Metrics = () => {
 
   return (
     <div
+      className="mx-auto w-full max-w-[1280px] px-4 py-2 sm:px-6 lg:px-4"
       style={{
-        maxWidth: "1280px",
         width: "100%",
         marginLeft: "auto",
         marginRight: "auto",
-        paddingTop: "0.5rem",
-        paddingBottom: "0.5rem",
-        paddingLeft: window.innerWidth >= 768 ? "1rem" : "1.5rem",
-        paddingRight: window.innerWidth >= 768 ? "1rem" : "1.5rem",
       }}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2
             className="text-[#f5f5f5]"
@@ -180,7 +176,7 @@ const Metrics = () => {
           </p>
         </div>
         <button
-          className="flex items-center"
+          className="flex items-center self-start"
           style={{
             padding: "0.5rem 1rem",
             borderRadius: "0.375rem",
@@ -195,7 +191,10 @@ const Metrics = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-4" style={{ marginTop: "1.5rem" }}>
+      <div
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        style={{ marginTop: "1.5rem" }}
+      >
         {loading
           ? Array.from({ length: 4 }).map((_, idx) => (
               <div
@@ -289,7 +288,10 @@ const Metrics = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-4" style={{ marginTop: "1.5rem" }}>
+        <div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          style={{ marginTop: "1.5rem" }}
+        >
           {itemsData.map((item, index) => {
             return (
               <div

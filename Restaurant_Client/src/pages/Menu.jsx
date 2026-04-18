@@ -16,15 +16,15 @@ const Menu = () => {
   const customerData = useSelector((state) => state.customer); // Access the customer data
   return (
     <section
-      className="bg-[#2a221e] min-h-screen overflow-y-auto flex gap-3"
+      className="flex min-h-screen flex-col gap-3 overflow-y-auto bg-[#2a221e] lg:flex-row"
       style={{
         paddingBottom: "4.5rem",
       }}
     >
       {/* Left */}
-      <div className="flex-[3]">
+      <div className="w-full lg:flex-[3]">
         <div
-          className="flex items-center justify-between"
+          className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
           style={{
             paddingLeft: "2rem",
             paddingRight: "2rem",
@@ -42,7 +42,7 @@ const Menu = () => {
               Menu
             </h1>
           </div>
-          <div className="flex items-center justify-around gap-4">
+          <div className="flex items-center justify-around gap-4 sm:w-auto sm:justify-around">
             <div className="flex items-center gap-3 cursor-pointer">
               <ScheduleOutlined
                 style={{ color: "#FFFFFF" }}
@@ -71,11 +71,9 @@ const Menu = () => {
 
       {/* Right */}
       <div
-        className="flex-[1] bg-[#1D1716] rounded-lg h-[780px]"
+        className="mx-4 mb-24 w-auto rounded-lg bg-[#1D1716] lg:mb-0 lg:mr-3 lg:ml-0 lg:h-[780px] lg:flex-[1]"
         style={{
           marginTop: "1rem",
-          marginRight: "0.75rem",
-
           paddingTop: "0.5rem",
         }}
       >

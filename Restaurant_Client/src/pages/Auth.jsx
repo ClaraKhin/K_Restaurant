@@ -9,12 +9,11 @@ const Auth = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   return (
-    <div className="flex w-full min-h-screen">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row">
       {/* left Section */}
       <div
-        className="flex items-center justify-center bg-cover"
+        className="hidden items-center justify-center bg-cover lg:flex lg:w-1/2"
         style={{
-          width: "50%",
           position: "relative",
         }}
       >
@@ -59,8 +58,8 @@ const Auth = () => {
 
       {/* Right Section */}
       <div
-        className="min-h-screen"
-        style={{ width: "50%", backgroundColor: "#1a1a1a", padding: "2.5rem" }}
+        className="min-h-screen w-full px-4 py-8 sm:px-8 lg:w-1/2"
+        style={{ backgroundColor: "#1a1a1a" }}
       >
         <div className="flex flex-col items-center gap-2">
           <img
@@ -85,18 +84,20 @@ const Auth = () => {
         <h2
           className="text-center text-yellow-400"
           style={{
-            fontSize: "2.25rem",
+            fontSize: "2rem",
             fontWeight: 600,
-            marginTop: "2.5rem",
-            marginBottom: "2.5rem",
+            marginTop: "2rem",
+            marginBottom: "2rem",
           }}
         >
           {isRegister ? "Employee Registeration" : "Employee Sign In"}
         </h2>
 
-        {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
+        <div className="mx-auto w-full max-w-lg">
+          {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
+        </div>
 
-        <div className="flex justify-center" style={{ marginTop: "4rem" }}>
+        <div className="flex justify-center" style={{ marginTop: "2.5rem" }}>
           <p
             className="text-[#ababab]"
             style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}

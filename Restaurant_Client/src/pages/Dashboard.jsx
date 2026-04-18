@@ -44,9 +44,12 @@ const Dashboard = () => {
     if (action === "category") setCategoryModalOpen(true);
   };
   return (
-    <div className="bg-[#2A221E]" style={{ height: "calc(100vh - 5rem)" }}>
+    <div
+      className="overflow-y-auto bg-[#2A221E]"
+      style={{ minHeight: "calc(100vh - 5rem)" }}
+    >
       <div
-        className="flex items-center justify-between md:px-4"
+        className="flex flex-col gap-4 md:px-4 xl:flex-row xl:items-center xl:justify-between"
         style={{
           maxWidth: "1280px",
           marginLeft: "auto",
@@ -57,7 +60,7 @@ const Dashboard = () => {
           paddingRight: "1.5rem",
         }}
       >
-        <div className="flex items-center gap-3 ">
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap xl:w-auto">
           {buttons.map(({ id, label, icon, action }) => {
             const isHovered = hover === id;
             return (
@@ -66,7 +69,7 @@ const Dashboard = () => {
                 onMouseEnter={() => setHover(id)}
                 onMouseLeave={() => setHover(null)}
                 onClick={() => handleOpenModal(action)}
-                className="flex items-center gap-2"
+                className="flex w-full items-center justify-center gap-2 sm:w-auto"
                 style={{
                   backgroundColor: isHovered ? "#3A322E " : "#1D1716",
                   paddingLeft: "2rem",
@@ -86,7 +89,7 @@ const Dashboard = () => {
           })}
         </div>
 
-        <div className="flex items-center gap-3 ">
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap xl:w-auto">
           {tabs.map(({ id, label }) => {
             const isHovered = hoverTab === id;
             return (
@@ -94,6 +97,7 @@ const Dashboard = () => {
                 key={id}
                 onMouseEnter={() => setHoverTab(id)}
                 onMouseLeave={() => setHoverTab(null)}
+                className="w-full sm:w-auto"
                 style={{
                   backgroundColor:
                     activeTab === label || isHovered ? "#3A322E" : "#1D1716",

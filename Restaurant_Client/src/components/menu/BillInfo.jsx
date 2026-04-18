@@ -193,7 +193,7 @@ const BillInfo = () => {
       </div>
 
       <div
-        className="flex items-center gap-3"
+        className="flex flex-col gap-3 sm:flex-row sm:items-center"
         style={{
           paddingLeft: "1.25rem",
           paddingRight: "1.25rem",

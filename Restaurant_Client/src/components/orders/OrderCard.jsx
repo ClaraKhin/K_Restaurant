@@ -81,10 +81,10 @@ const OrderCard = ({ order }) => {
   const totalNumber = typeof total === "number" ? total : Number(total);
   return (
     <div
-      className="w-[450px] bg-[#1d1716] rounded-lg"
+      className="w-full max-w-[450px] rounded-lg bg-[#1d1716] lg:w-[450px]"
       style={{ padding: "1rem", marginBottom: "1rem" }}
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-start gap-4 sm:items-center sm:gap-5">
         <button
           style={{
             backgroundColor: "#f6b100",
@@ -96,7 +96,7 @@ const OrderCard = ({ order }) => {
         >
           {initials}
         </button>
-        <div className="flex items-center justify-between w-[100%]">
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col items-start gap-1">
             <h1
               className="text-[#FFFFFF] tracking-wide"
@@ -109,7 +109,7 @@ const OrderCard = ({ order }) => {
             </p>
           </div>
 
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-start gap-1 sm:items-end">
             <p
               className={`${statusMeta.pillClassName} rounded-lg`}
               style={{
@@ -153,7 +153,7 @@ const OrderCard = ({ order }) => {
         </div>
       </div>
       <div
-        className="flex items-center justify-between text-[#ababab]"
+        className="flex flex-col gap-2 text-[#ababab] sm:flex-row sm:items-center sm:justify-between"
         style={{ marginTop: "1rem" }}
       >
         <p>{formattedDateTime}</p>

@@ -43,7 +43,7 @@ const Greetings = () => {
 
   return (
     <div
-      className="flex justify-between items-center"
+      className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
       style={{
         paddingLeft: "1rem",
         paddingRight: "1rem",
@@ -61,8 +61,8 @@ const Greetings = () => {
           Give your best services for customers 😊
         </p>
       </div>
-      <div>
-        <h1 className="text-[#FFFFFF] text-3xl font-bold tracking-wide w-[130px]">
+      <div className="w-full sm:w-auto">
+        <h1 className="w-full text-2xl font-bold tracking-wide text-[#FFFFFF] sm:w-[130px] sm:text-3xl">
           {formatTime(dateTime)}
         </h1>
         <p className="text-[#ababab] text-sms">{formatDate(dateTime)}</p>

@@ -206,7 +206,7 @@ const Register = ({ setIsRegister }) => {
           </label>
 
           <div
-            className="flex items-center gap-3 "
+            className="flex flex-col items-center gap-3 sm:flex-row"
             style={{ marginTop: "1rem" }}
           >
             {["Waiter", "Cashier", "Admin"].map((role) => {

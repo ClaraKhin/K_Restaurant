@@ -9,7 +9,11 @@ import { enqueueSnackbar } from "notistack";
 const Orders = () => {
   const [status, setStatus] = useState("all");
 
-  const { data: resData, isError, isPending } = useQuery({
+  const {
+    data: resData,
+    isError,
+    isPending,
+  } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getOrders();
@@ -46,7 +50,7 @@ const Orders = () => {
       }}
     >
       <div
-        className="flex items-center justify-between"
+        className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
         style={{
           paddingLeft: "2rem",
           paddingRight: "2rem",
@@ -64,9 +68,10 @@ const Orders = () => {
             Orders
           </h1>
         </div>
-        <div className="flex items-center justify-around gap-4">
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:gap-4 lg:w-auto lg:justify-around">
           <button
             onClick={() => setStatus("all")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "all" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "all" ? "#FAF0DC" : "",
@@ -84,6 +89,7 @@ const Orders = () => {
           </button>
           <button
             onClick={() => setStatus("progress")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "progress" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "progress" ? "#FAF0DC" : "",
@@ -101,6 +107,7 @@ const Orders = () => {
           </button>
           <button
             onClick={() => setStatus("ready")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "ready" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "ready" ? "#FAF0DC" : "",
@@ -118,6 +125,7 @@ const Orders = () => {
           </button>
           <button
             onClick={() => setStatus("completed")}
+            className="text-sm sm:text-base"
             style={{
               color: status === "completed" ? "#2a221e" : "#FFFFFF",
               backgroundColor: status === "completed" ? "#FAF0DC" : "",
@@ -138,8 +146,8 @@ const Orders = () => {
       <div
         className="flex flex-wrap gap-6 items-center justify-center h-[calc(100vh-9rem-2rem)] overflow-y-scroll"
         style={{
-          paddingLeft: "2.5rem",
-          paddingRight: "2.5rem",
+          paddingLeft: "1rem",
+          paddingRight: "1rem",
           paddingTop: "1rem",
           paddingBottom: "1rem",
           scrollbarWidth: "none",
@@ -154,7 +162,9 @@ const Orders = () => {
             No orders found.
           </p>
         ) : (
-          filteredOrders.map((order) => <OrderCard key={order._id} order={order} />)
+          filteredOrders.map((order) => (
+            <OrderCard key={order._id} order={order} />
+          ))
         )}
       </div>
 

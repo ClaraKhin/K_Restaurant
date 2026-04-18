@@ -70,8 +70,8 @@ const Categories = ({ setCategoryModalOpen }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="bg-[#3A322E] rounded-lg w-96"
-        style={{ padding: "1.5rem" }}
+        className="w-full max-w-md rounded-lg bg-[#3A322E]"
+        style={{ padding: "1.5rem", marginLeft: "1rem", marginRight: "1rem" }}
       >
         <div
           className="flex items-center justify-between"

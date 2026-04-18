@@ -1,13 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @import "tailwindcss";
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 body {
   font-family: "Inter", sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.input-search {
+  min-width: 0;
 }
 
 .fullscreen-loader {
@@ -45,5 +56,83 @@ body {
 
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .dashboard-grid-scroll {
+    overflow-x: visible !important;
+  }
+
+  .dashboard-grid-table {
+    min-width: 0 !important;
+  }
+
+  .dashboard-grid-header {
+    display: none !important;
+  }
+
+  .dashboard-grid-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #3a322e;
+    border-radius: 0.75rem;
+    background-color: #2a221e;
+  }
+
+  .dashboard-grid-row > div {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 !important;
+  }
+
+  .dashboard-grid-row > div::before {
+    content: attr(data-label);
+    color: #ababab;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .dashboard-grid-row > div[data-label=""]::before {
+    content: none;
+  }
+
+  .receipt-items-header {
+    display: none !important;
+  }
+
+  .receipt-item-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem;
+  }
+
+  .receipt-item-row > p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    text-align: right;
+  }
+
+  .receipt-item-row > p::before {
+    content: attr(data-label);
+    color: #8b8b8b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+    text-align: left;
+    flex-shrink: 0;
   }
 }

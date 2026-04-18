@@ -41,7 +41,7 @@ const BottomNav = () => {
     <div className="fixed bottom-0 left-0 right-0 bg-[#1d1716] p-2 h-16 flex justify-around ">
       <button
         onClick={() => navigate("/")}
-        className="flex cursor-pointer items-center justify-center w-[200px]"
+        className="flex min-w-0 flex-1 cursor-pointer items-center justify-center lg:w-[200px] lg:flex-none"
         style={{
           backgroundColor: isActive("/") ? "#FAF0DC" : "",
           borderRadius: "20px",
@@ -55,12 +55,12 @@ const BottomNav = () => {
           }}
         />
         <p className={isActive("/") ? "text-[#2a221e]" : "text-[#FAF0DC]"}>
-          Home
+          <span className="hidden sm:inline">Home</span>
         </p>
       </button>
       <button
         onClick={() => navigate("/orders")}
-        className="flex cursor-pointer items-center justify-center w-[200px]"
+        className="flex min-w-0 flex-1 cursor-pointer items-center justify-center lg:w-[200px] lg:flex-none"
         style={{
           backgroundColor: isActive("/orders") ? "#FAF0DC" : "",
           borderRadius: "20px",
@@ -76,12 +76,12 @@ const BottomNav = () => {
         <p
           className={isActive("/orders") ? "text-[#2a221e]" : "text-[#FAF0DC]"}
         >
-          Orders
+          <span className="hidden sm:inline">Orders</span>
         </p>
       </button>
       <button
         onClick={() => navigate("/tables")}
-        className="flex cursor-pointer items-center justify-center w-[200px]"
+        className="flex min-w-0 flex-1 cursor-pointer items-center justify-center lg:w-[200px] lg:flex-none"
         style={{
           backgroundColor: isActive("/tables") ? "#FAF0DC" : "",
           borderRadius: "20px",
@@ -97,10 +97,10 @@ const BottomNav = () => {
         <p
           className={isActive("/tables") ? "text-[#2a221e]" : "text-[#FAF0DC]"}
         >
-          Tables
+          <span className="hidden sm:inline">Tables</span>
         </p>
       </button>
-      <button className="flex cursor-pointer items-center justify-center w-[200px]">
+      <button className="flex min-w-0 flex-1 cursor-pointer items-center justify-center lg:w-[200px] lg:flex-none">
         <EllipsisOutlined
           className="text-2xl inline rounded-full "
           style={{
@@ -110,7 +110,9 @@ const BottomNav = () => {
             marginRight: "5px",
           }}
         />
-        <p className="text-[#FAF0DC]">More</p>
+        <p className="text-[#FAF0DC]">
+          <span className="hidden sm:inline">More</span>
+        </p>
       </button>
 
       <button

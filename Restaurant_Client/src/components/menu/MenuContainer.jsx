@@ -57,12 +57,12 @@ const MenuContainer = () => {
   return (
     <>
       <div
-        className="grid grid-cols-4 gap-4 w-[100%]"
+        className="grid w-full grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-10"
         style={{
-          paddingLeft: "2.5rem",
-          paddingRight: "2.5rem",
           paddingTop: "1rem",
           paddingBottom: "1rem",
+          paddingLeft: "2.5rem",
+          paddingRight: "2.5rem",
         }}
       >
         {menus.map((menu) => {
@@ -101,15 +101,21 @@ const MenuContainer = () => {
         })}
       </div>
 
-      <hr style={{ borderTop: "1px solid #faf0dc2a", marginTop: "1rem" }} />
+      <hr
+        style={{
+          borderTop: "1px solid #faf0dc2a",
+          marginTop: "0.5rem",
+          marginBottom: "1rem",
+        }}
+      />
 
       <div
-        className="grid grid-cols-4 gap-4 w-[100%]"
+        className="grid w-full grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-10"
         style={{
-          paddingLeft: "2.5rem",
-          paddingRight: "2.5rem",
           paddingTop: "1rem",
           paddingBottom: "1rem",
+          paddingLeft: "2.5rem",
+          paddingRight: "2.5rem",
         }}
       >
         {selectedMenu?.items.map((item) => {
@@ -121,7 +127,7 @@ const MenuContainer = () => {
               onMouseEnter={() => setHover(item.id)}
               onMouseLeave={() => setHover(null)}
               key={item.id}
-              className="flex flex-col items-start justify-between h-[150px] rounded-lg"
+              className="flex min-h-[150px] flex-col items-start justify-between rounded-lg"
               style={{
                 padding: "1rem",
                 backgroundColor: hover === item.id ? "#7d7c7c3b" : "#1d1716",

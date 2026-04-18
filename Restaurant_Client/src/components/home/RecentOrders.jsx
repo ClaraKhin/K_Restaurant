@@ -56,9 +56,9 @@ const RecentOrders = () => {
         paddingRight: "1rem",
       }}
     >
-      <div className="bg-[#1D1716] w-full rounded-lg h-[396px]">
+      <div className="h-[396px] w-full rounded-lg bg-[#1D1716]">
         <div
-          className="flex justify-between items-center"
+          className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
           style={{
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
@@ -83,7 +83,7 @@ const RecentOrders = () => {
         </div>
 
         <div
-          className="flex items-center gap-4 bg-[#2a221e] rounded-[15px] mx-6"
+          className="mx-4 flex items-center gap-3 rounded-[15px] bg-[#2a221e] sm:gap-4"
           style={{
             paddingLeft: "1rem",
             paddingRight: "1rem",
@@ -133,7 +133,7 @@ const RecentOrders = () => {
             filteredOrders.map((order) => (
               <div
                 key={order._id}
-                className="flex items-center gap-6"
+                className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6"
                 style={{ marginBottom: "0.5rem" }}
               >
                 <button
@@ -152,7 +152,7 @@ const RecentOrders = () => {
                     .toUpperCase()
                     .slice(0, 2)}
                 </button>
-                <div className="flex items-center justify-between w-[100%]">
+                <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-col items-start gap-1">
                     <h1
                       className="text-[#FFFFFF] tracking-wide"
@@ -170,7 +170,7 @@ const RecentOrders = () => {
                     </p>
                   </div>
 
-                  <div>
+                  <div className="self-start sm:self-auto">
                     <h1
                       className="text-[#f6b100]"
                       style={{
@@ -186,7 +186,7 @@ const RecentOrders = () => {
                         : "Take away"}
                     </h1>
                   </div>
-                  <div className="flex flex-col items-end gap-1 w-[18%]">
+                  <div className="flex w-full flex-col items-start gap-1 sm:w-[18%] sm:items-end">
                     {order?.orderStatus === "Ready" ? (
                       <div
                         className="bg-[#2e4a40] rounded-lg flex items-center"

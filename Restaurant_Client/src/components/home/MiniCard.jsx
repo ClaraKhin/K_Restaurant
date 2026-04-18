@@ -3,7 +3,7 @@ import React from "react";
 const MiniCard = ({ title, icon, number, footerNum }) => {
   return (
     <div
-      className="bg-[#1d1716] rounded-lg w-[50%]"
+      className="w-full rounded-lg bg-[#1d1716] sm:w-[50%]"
       style={{ padding: "1.2rem" }}
     >
       <div className="flex items-start justify-between">

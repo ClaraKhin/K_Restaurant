@@ -38,7 +38,7 @@ const CartInfo = () => {
         Order Details
       </h1>
       <div
-        className="h-[380px]"
+        className="h-[280px] sm:h-[320px] lg:h-[380px]"
         style={{
           marginTop: "1rem",
           overflowY: "scroll",
@@ -49,7 +49,7 @@ const CartInfo = () => {
       >
         {cartData.length === 0 ? (
           <p
-            className="text-[#ababab] flex justify-center items-center h-[380px]"
+            className="flex h-[280px] items-center justify-center text-[#ababab] sm:h-[320px] lg:h-[380px]"
             style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}
           >
             Your cart is empty. Start adding items!
